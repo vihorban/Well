@@ -1,0 +1,578 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A46C8533-D826-407F-9314-CF9052533882}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Well</RootNamespace>
+    <AssemblyName>Well</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Any CPU|x86'">
+    <OutputPath>bin\x86\Any CPU\</OutputPath>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="CustomCommands.cs" />
+    <Compile Include="ImageMerger.cs" />
+    <Compile Include="LanguageCode.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="VisibilityConverter.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Resources\LocalizationEN.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\LocalizationRU.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\LocalizationUA.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Objects\BackDeck.cs" />
+    <Compile Include="Objects\BorderChestDeck.cs" />
+    <Compile Include="Objects\Card.cs" />
+    <Compile Include="Objects\Deck.cs" />
+    <Compile Include="Objects\Enums.cs" />
+    <Compile Include="Objects\Game.cs" />
+    <Compile Include="Objects\MiddleChestDeck.cs" />
+    <Compile Include="Objects\ResultDeck.cs" />
+    <Compile Include="Objects\Step.cs" />
+    <Compile Include="Objects\TopDeck.cs" />
+    <Compile Include="Objects\WarehouseDeck.cs" />
+    <Compile Include="Observable.cs" />
+    <Compile Include="OptionsViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="cards0\10Clubs.png" />
+    <Resource Include="cards0\10Diamonds.png" />
+    <Resource Include="cards0\10Hearts.png" />
+    <Resource Include="cards0\10Spades.png" />
+    <Resource Include="cards0\11Clubs.png" />
+    <Resource Include="cards0\11Diamonds.png" />
+    <Resource Include="cards0\11Hearts.png" />
+    <Resource Include="cards0\11Spades.png" />
+    <Resource Include="cards0\12Clubs.png" />
+    <Resource Include="cards0\12Diamonds.png" />
+    <Resource Include="cards0\12Hearts.png" />
+    <Resource Include="cards0\12Spades.png" />
+    <Resource Include="cards0\13Clubs.png" />
+    <Resource Include="cards0\13Diamonds.png" />
+    <Resource Include="cards0\13Hearts.png" />
+    <Resource Include="cards0\13Spades.png" />
+    <Resource Include="cards0\1Clubs.png" />
+    <Resource Include="cards0\1Diamonds.png" />
+    <Resource Include="cards0\1Hearts.png" />
+    <Resource Include="cards0\1Spades.png" />
+    <Resource Include="cards0\2Clubs.png" />
+    <Resource Include="cards0\2Diamonds.png" />
+    <Resource Include="cards0\2Hearts.png" />
+    <Resource Include="cards0\2Spades.png" />
+    <Resource Include="cards0\3Clubs.png" />
+    <Resource Include="cards0\3Diamonds.png" />
+    <Resource Include="cards0\3Hearts.png" />
+    <Resource Include="cards0\3Spades.png" />
+    <Resource Include="cards0\4Clubs.png" />
+    <Resource Include="cards0\4Diamonds.png" />
+    <Resource Include="cards0\4Hearts.png" />
+    <Resource Include="cards0\4Spades.png" />
+    <Resource Include="cards0\5Clubs.png" />
+    <Resource Include="cards0\5Diamonds.png" />
+    <Resource Include="cards0\5Hearts.png" />
+    <Resource Include="cards0\5Spades.png" />
+    <Resource Include="cards0\6Clubs.png" />
+    <Resource Include="cards0\6Diamonds.png" />
+    <Resource Include="cards0\6Hearts.png" />
+    <Resource Include="cards0\6Spades.png" />
+    <Resource Include="cards0\7Clubs.png" />
+    <Resource Include="cards0\7Diamonds.png" />
+    <Resource Include="cards0\7Hearts.png" />
+    <Resource Include="cards0\7Spades.png" />
+    <Resource Include="cards0\8Clubs.png" />
+    <Resource Include="cards0\8Diamonds.png" />
+    <Resource Include="cards0\8Hearts.png" />
+    <Resource Include="cards0\8Spades.png" />
+    <Resource Include="cards0\9Clubs.png" />
+    <Resource Include="cards0\9Diamonds.png" />
+    <Resource Include="cards0\9Hearts.png" />
+    <Resource Include="cards0\9Spades.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="app.ico" />
+    <Resource Include="commonCards\Empty7.png" />
+    <Resource Include="ico.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LocalizableAttribute\LocalizableAttribute.csproj">
+      <Project>{607A1428-1D35-490E-A93E-0EC831052550}</Project>
+      <Name>LocalizableAttribute</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PropertyTools.Wpf\PropertyTools.Wpf_NET40.csproj">
+      <Project>{7168F82F-288A-42C4-9EB1-FBBE5112F211}</Project>
+      <Name>PropertyTools.Wpf_NET40</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PropertyTools\PropertyTools_NET40.csproj">
+      <Project>{37466829-61F5-47FA-9E3E-9CEDCD9535C0}</Project>
+      <Name>PropertyTools_NET40</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="about.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="commonCards\Back0.png" />
+    <Resource Include="commonCards\Back1.png" />
+    <Resource Include="commonCards\Back2.png" />
+    <Resource Include="commonCards\Back3.png" />
+    <Resource Include="commonCards\Back4.png" />
+    <Resource Include="commonCards\Empty0.png" />
+    <Resource Include="commonCards\None0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="cards1\10Clubs.png" />
+    <Resource Include="cards1\10Diamonds.png" />
+    <Resource Include="cards1\10Hearts.png" />
+    <Resource Include="cards1\10Spades.png" />
+    <Resource Include="cards1\11Clubs.png" />
+    <Resource Include="cards1\11Diamonds.png" />
+    <Resource Include="cards1\11Hearts.png" />
+    <Resource Include="cards1\11Spades.png" />
+    <Resource Include="cards1\12Clubs.png" />
+    <Resource Include="cards1\12Diamonds.png" />
+    <Resource Include="cards1\12Hearts.png" />
+    <Resource Include="cards1\12Spades.png" />
+    <Resource Include="cards1\13Clubs.png" />
+    <Resource Include="cards1\13Diamonds.png" />
+    <Resource Include="cards1\13Hearts.png" />
+    <Resource Include="cards1\13Spades.png" />
+    <Resource Include="cards1\1Clubs.png" />
+    <Resource Include="cards1\1Diamonds.png" />
+    <Resource Include="cards1\1Hearts.png" />
+    <Resource Include="cards1\1Spades.png" />
+    <Resource Include="cards1\2Clubs.png" />
+    <Resource Include="cards1\2Diamonds.png" />
+    <Resource Include="cards1\2Hearts.png" />
+    <Resource Include="cards1\2Spades.png" />
+    <Resource Include="cards1\3Clubs.png" />
+    <Resource Include="cards1\3Diamonds.png" />
+    <Resource Include="cards1\3Hearts.png" />
+    <Resource Include="cards1\3Spades.png" />
+    <Resource Include="cards1\4Clubs.png" />
+    <Resource Include="cards1\4Diamonds.png" />
+    <Resource Include="cards1\4Hearts.png" />
+    <Resource Include="cards1\4Spades.png" />
+    <Resource Include="cards1\5Clubs.png" />
+    <Resource Include="cards1\5Diamonds.png" />
+    <Resource Include="cards1\5Hearts.png" />
+    <Resource Include="cards1\5Spades.png" />
+    <Resource Include="cards1\6Clubs.png" />
+    <Resource Include="cards1\6Diamonds.png" />
+    <Resource Include="cards1\6Hearts.png" />
+    <Resource Include="cards1\6Spades.png" />
+    <Resource Include="cards1\7Clubs.png" />
+    <Resource Include="cards1\7Diamonds.png" />
+    <Resource Include="cards1\7Hearts.png" />
+    <Resource Include="cards1\7Spades.png" />
+    <Resource Include="cards1\8Clubs.png" />
+    <Resource Include="cards1\8Diamonds.png" />
+    <Resource Include="cards1\8Hearts.png" />
+    <Resource Include="cards1\8Spades.png" />
+    <Resource Include="cards1\9Clubs.png" />
+    <Resource Include="cards1\9Diamonds.png" />
+    <Resource Include="cards1\9Hearts.png" />
+    <Resource Include="cards1\9Spades.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\category.png" />
+    <Resource Include="Images\chart.png" />
+    <Resource Include="Images\error.png" />
+    <Resource Include="Images\home.png" />
+    <Resource Include="Images\home2.png" />
+    <Resource Include="Images\home3.png" />
+    <Resource Include="Images\lightbulb.png" />
+    <Resource Include="Images\lightbulb1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="commonCards\Back5.png" />
+    <Resource Include="commonCards\Back6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="commonCards\Back10.png" />
+    <Resource Include="commonCards\Back7.png" />
+    <Resource Include="commonCards\Back8.png" />
+    <Resource Include="commonCards\Back9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="commonCards\Empty1.png" />
+    <Resource Include="commonCards\Empty2.png" />
+    <Resource Include="commonCards\Empty3.png" />
+    <Resource Include="commonCards\Empty4.png" />
+    <Resource Include="commonCards\Empty5.png" />
+    <Resource Include="commonCards\None1.png" />
+    <Resource Include="commonCards\None10.png" />
+    <Resource Include="commonCards\None2.png" />
+    <Resource Include="commonCards\None3.png" />
+    <Resource Include="commonCards\None4.png" />
+    <Resource Include="commonCards\None5.png" />
+    <Resource Include="commonCards\None6.png" />
+    <Resource Include="commonCards\None7.png" />
+    <Resource Include="commonCards\None8.png" />
+    <Resource Include="commonCards\None9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="commonCards\Empty6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="commonCards\Back11.png" />
+    <Resource Include="commonCards\Back12.png" />
+    <Resource Include="commonCards\Back13.png" />
+    <Resource Include="commonCards\Back14.png" />
+    <Resource Include="commonCards\Back15.png" />
+    <Resource Include="commonCards\Back16.png" />
+    <Resource Include="commonCards\Back17.png" />
+    <Resource Include="commonCards\Back18.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="cards2\10Clubs.png" />
+    <Resource Include="cards2\10Diamonds.png" />
+    <Resource Include="cards2\10Hearts.png" />
+    <Resource Include="cards2\10Spades.png" />
+    <Resource Include="cards2\11Clubs.png" />
+    <Resource Include="cards2\11Diamonds.png" />
+    <Resource Include="cards2\11Hearts.png" />
+    <Resource Include="cards2\11Spades.png" />
+    <Resource Include="cards2\12Clubs.png" />
+    <Resource Include="cards2\12Diamonds.png" />
+    <Resource Include="cards2\12Hearts.png" />
+    <Resource Include="cards2\12Spades.png" />
+    <Resource Include="cards2\13Clubs.png" />
+    <Resource Include="cards2\13Diamonds.png" />
+    <Resource Include="cards2\13Hearts.png" />
+    <Resource Include="cards2\13Spades.png" />
+    <Resource Include="cards2\1Clubs.png" />
+    <Resource Include="cards2\1Diamonds.png" />
+    <Resource Include="cards2\1Hearts.png" />
+    <Resource Include="cards2\1Spades.png" />
+    <Resource Include="cards2\2Clubs.png" />
+    <Resource Include="cards2\2Diamonds.png" />
+    <Resource Include="cards2\2Hearts.png" />
+    <Resource Include="cards2\2Spades.png" />
+    <Resource Include="cards2\3Clubs.png" />
+    <Resource Include="cards2\3Diamonds.png" />
+    <Resource Include="cards2\3Hearts.png" />
+    <Resource Include="cards2\3Spades.png" />
+    <Resource Include="cards2\4Clubs.png" />
+    <Resource Include="cards2\4Diamonds.png" />
+    <Resource Include="cards2\4Hearts.png" />
+    <Resource Include="cards2\4Spades.png" />
+    <Resource Include="cards2\5Clubs.png" />
+    <Resource Include="cards2\5Diamonds.png" />
+    <Resource Include="cards2\5Hearts.png" />
+    <Resource Include="cards2\5Spades.png" />
+    <Resource Include="cards2\6Clubs.png" />
+    <Resource Include="cards2\6Diamonds.png" />
+    <Resource Include="cards2\6Hearts.png" />
+    <Resource Include="cards2\6Spades.png" />
+    <Resource Include="cards2\7Clubs.png" />
+    <Resource Include="cards2\7Diamonds.png" />
+    <Resource Include="cards2\7Hearts.png" />
+    <Resource Include="cards2\7Spades.png" />
+    <Resource Include="cards2\8Clubs.png" />
+    <Resource Include="cards2\8Diamonds.png" />
+    <Resource Include="cards2\8Hearts.png" />
+    <Resource Include="cards2\8Spades.png" />
+    <Resource Include="cards2\9Clubs.png" />
+    <Resource Include="cards2\9Diamonds.png" />
+    <Resource Include="cards2\9Hearts.png" />
+    <Resource Include="cards2\9Spades.png" />
+    <Resource Include="cards3\10Clubs.png" />
+    <Resource Include="cards3\10Diamonds.png" />
+    <Resource Include="cards3\10Hearts.png" />
+    <Resource Include="cards3\10Spades.png" />
+    <Resource Include="cards3\11Clubs.png" />
+    <Resource Include="cards3\11Diamonds.png" />
+    <Resource Include="cards3\11Hearts.png" />
+    <Resource Include="cards3\11Spades.png" />
+    <Resource Include="cards3\12Clubs.png" />
+    <Resource Include="cards3\12Diamonds.png" />
+    <Resource Include="cards3\12Hearts.png" />
+    <Resource Include="cards3\12Spades.png" />
+    <Resource Include="cards3\13Clubs.png" />
+    <Resource Include="cards3\13Diamonds.png" />
+    <Resource Include="cards3\13Hearts.png" />
+    <Resource Include="cards3\13Spades.png" />
+    <Resource Include="cards3\1Clubs.png" />
+    <Resource Include="cards3\1Diamonds.png" />
+    <Resource Include="cards3\1Hearts.png" />
+    <Resource Include="cards3\1Spades.png" />
+    <Resource Include="cards3\2Clubs.png" />
+    <Resource Include="cards3\2Diamonds.png" />
+    <Resource Include="cards3\2Hearts.png" />
+    <Resource Include="cards3\2Spades.png" />
+    <Resource Include="cards3\3Clubs.png" />
+    <Resource Include="cards3\3Diamonds.png" />
+    <Resource Include="cards3\3Hearts.png" />
+    <Resource Include="cards3\3Spades.png" />
+    <Resource Include="cards3\4Clubs.png" />
+    <Resource Include="cards3\4Diamonds.png" />
+    <Resource Include="cards3\4Hearts.png" />
+    <Resource Include="cards3\4Spades.png" />
+    <Resource Include="cards3\5Clubs.png" />
+    <Resource Include="cards3\5Diamonds.png" />
+    <Resource Include="cards3\5Hearts.png" />
+    <Resource Include="cards3\5Spades.png" />
+    <Resource Include="cards3\6Clubs.png" />
+    <Resource Include="cards3\6Diamonds.png" />
+    <Resource Include="cards3\6Hearts.png" />
+    <Resource Include="cards3\6Spades.png" />
+    <Resource Include="cards3\7Clubs.png" />
+    <Resource Include="cards3\7Diamonds.png" />
+    <Resource Include="cards3\7Hearts.png" />
+    <Resource Include="cards3\7Spades.png" />
+    <Resource Include="cards3\8Clubs.png" />
+    <Resource Include="cards3\8Diamonds.png" />
+    <Resource Include="cards3\8Hearts.png" />
+    <Resource Include="cards3\8Spades.png" />
+    <Resource Include="cards3\9Clubs.png" />
+    <Resource Include="cards3\9Diamonds.png" />
+    <Resource Include="cards3\9Hearts.png" />
+    <Resource Include="cards3\9Spades.png" />
+    <Resource Include="cards4\10Clubs.png" />
+    <Resource Include="cards4\10Diamonds.png" />
+    <Resource Include="cards4\10Hearts.png" />
+    <Resource Include="cards4\10Spades.png" />
+    <Resource Include="cards4\11Clubs.png" />
+    <Resource Include="cards4\11Diamonds.png" />
+    <Resource Include="cards4\11Hearts.png" />
+    <Resource Include="cards4\11Spades.png" />
+    <Resource Include="cards4\12Clubs.png" />
+    <Resource Include="cards4\12Diamonds.png" />
+    <Resource Include="cards4\12Hearts.png" />
+    <Resource Include="cards4\12Spades.png" />
+    <Resource Include="cards4\13Clubs.png" />
+    <Resource Include="cards4\13Diamonds.png" />
+    <Resource Include="cards4\13Hearts.png" />
+    <Resource Include="cards4\13Spades.png" />
+    <Resource Include="cards4\1Clubs.png" />
+    <Resource Include="cards4\1Diamonds.png" />
+    <Resource Include="cards4\1Hearts.png" />
+    <Resource Include="cards4\1Spades.png" />
+    <Resource Include="cards4\2Clubs.png" />
+    <Resource Include="cards4\2Diamonds.png" />
+    <Resource Include="cards4\2Hearts.png" />
+    <Resource Include="cards4\2Spades.png" />
+    <Resource Include="cards4\3Clubs.png" />
+    <Resource Include="cards4\3Diamonds.png" />
+    <Resource Include="cards4\3Hearts.png" />
+    <Resource Include="cards4\3Spades.png" />
+    <Resource Include="cards4\4Clubs.png" />
+    <Resource Include="cards4\4Diamonds.png" />
+    <Resource Include="cards4\4Hearts.png" />
+    <Resource Include="cards4\4Spades.png" />
+    <Resource Include="cards4\5Clubs.png" />
+    <Resource Include="cards4\5Diamonds.png" />
+    <Resource Include="cards4\5Hearts.png" />
+    <Resource Include="cards4\5Spades.png" />
+    <Resource Include="cards4\6Clubs.png" />
+    <Resource Include="cards4\6Diamonds.png" />
+    <Resource Include="cards4\6Hearts.png" />
+    <Resource Include="cards4\6Spades.png" />
+    <Resource Include="cards4\7Clubs.png" />
+    <Resource Include="cards4\7Diamonds.png" />
+    <Resource Include="cards4\7Hearts.png" />
+    <Resource Include="cards4\7Spades.png" />
+    <Resource Include="cards4\8Clubs.png" />
+    <Resource Include="cards4\8Diamonds.png" />
+    <Resource Include="cards4\8Hearts.png" />
+    <Resource Include="cards4\8Spades.png" />
+    <Resource Include="cards4\9Clubs.png" />
+    <Resource Include="cards4\9Diamonds.png" />
+    <Resource Include="cards4\9Hearts.png" />
+    <Resource Include="cards4\9Spades.png" />
+    <Resource Include="cards5\10Clubs.png" />
+    <Resource Include="cards5\10Diamonds.png" />
+    <Resource Include="cards5\10Hearts.png" />
+    <Resource Include="cards5\10Spades.png" />
+    <Resource Include="cards5\11Clubs.png" />
+    <Resource Include="cards5\11Diamonds.png" />
+    <Resource Include="cards5\11Hearts.png" />
+    <Resource Include="cards5\11Spades.png" />
+    <Resource Include="cards5\12Clubs.png" />
+    <Resource Include="cards5\12Diamonds.png" />
+    <Resource Include="cards5\12Hearts.png" />
+    <Resource Include="cards5\12Spades.png" />
+    <Resource Include="cards5\13Clubs.png" />
+    <Resource Include="cards5\13Diamonds.png" />
+    <Resource Include="cards5\13Hearts.png" />
+    <Resource Include="cards5\13Spades.png" />
+    <Resource Include="cards5\1Clubs.png" />
+    <Resource Include="cards5\1Diamonds.png" />
+    <Resource Include="cards5\1Hearts.png" />
+    <Resource Include="cards5\1Spades.png" />
+    <Resource Include="cards5\2Clubs.png" />
+    <Resource Include="cards5\2Diamonds.png" />
+    <Resource Include="cards5\2Hearts.png" />
+    <Resource Include="cards5\2Spades.png" />
+    <Resource Include="cards5\3Clubs.png" />
+    <Resource Include="cards5\3Diamonds.png" />
+    <Resource Include="cards5\3Hearts.png" />
+    <Resource Include="cards5\3Spades.png" />
+    <Resource Include="cards5\4Clubs.png" />
+    <Resource Include="cards5\4Diamonds.png" />
+    <Resource Include="cards5\4Hearts.png" />
+    <Resource Include="cards5\4Spades.png" />
+    <Resource Include="cards5\5Clubs.png" />
+    <Resource Include="cards5\5Diamonds.png" />
+    <Resource Include="cards5\5Hearts.png" />
+    <Resource Include="cards5\5Spades.png" />
+    <Resource Include="cards5\6Clubs.png" />
+    <Resource Include="cards5\6Diamonds.png" />
+    <Resource Include="cards5\6Hearts.png" />
+    <Resource Include="cards5\6Spades.png" />
+    <Resource Include="cards5\7Clubs.png" />
+    <Resource Include="cards5\7Diamonds.png" />
+    <Resource Include="cards5\7Hearts.png" />
+    <Resource Include="cards5\7Spades.png" />
+    <Resource Include="cards5\8Clubs.png" />
+    <Resource Include="cards5\8Diamonds.png" />
+    <Resource Include="cards5\8Hearts.png" />
+    <Resource Include="cards5\8Spades.png" />
+    <Resource Include="cards5\9Clubs.png" />
+    <Resource Include="cards5\9Diamonds.png" />
+    <Resource Include="cards5\9Hearts.png" />
+    <Resource Include="cards5\9Spades.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
