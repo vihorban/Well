@@ -1,46 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Well.Objects
 {
     public class ResultDeck : Deck
     {
-        public List<SuitEnum> availableSuits;
+        public List<SuitEnum> AvailableSuits;
+
         public ResultDeck()
-            : base()
         {
-            SuitEnum[] suits = { SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds };
-            availableSuits = new List<SuitEnum>(suits);
+            SuitEnum[] suits = {SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds};
+            AvailableSuits = new List<SuitEnum>(suits);
         }
 
-        public ResultDeck(string Name)
-            : base(Name)
+        public ResultDeck(string name)
+            : base(name)
         {
-            SuitEnum[] suits = { SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds };
-            availableSuits = new List<SuitEnum>(suits);
+            SuitEnum[] suits = {SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds};
+            AvailableSuits = new List<SuitEnum>(suits);
         }
 
-        public override bool canPutOnTop(Card newCard)
+        public override bool CanPutOnTop(Card newCard)
         {
-            if (newCard.value == topCard().value - 1 && newCard.suit == topCard().suit)
+            if (newCard.Value == TopCard().Value - 1 && newCard.Suit == TopCard().Suit)
                 return true;
-            if (newCard.value == 13 && topCard().value == 1 && newCard.suit == topCard().suit)
+            if (newCard.Value == 13 && TopCard().Value == 1 && newCard.Suit == TopCard().Suit)
                 return true;
-            SuitEnum result = SuitEnum.Any;
-            foreach (SuitEnum s in availableSuits)
-                if (s == newCard.suit)
+            var result = SuitEnum.Any;
+            foreach (SuitEnum s in AvailableSuits)
+                if (s == newCard.Suit)
                     result = s;
-            if (newCard.value == 13 && topCard().value == 0 && result != SuitEnum.Any)
+            if (newCard.Value == 13 && TopCard().Value == 0 && result != SuitEnum.Any)
             {
-                availableSuits.Remove(result);
+                AvailableSuits.Remove(result);
                 return true;
             }
             return false;
         }
 
-        public override bool tryMove(Deck deck)
+        public override bool TryMove(Deck deck)
         {
             return false;
         }

@@ -1,86 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Well.Objects
 {
     public class Deck
     {
-        public List<Card> items;
-        public string name;
+        public List<Card> Items;
+        public string Name;
 
         public Deck()
         {
-            items = new List<Card>();
-            name = "Unknown";
+            Items = new List<Card>();
+            Name = "Unknown";
         }
 
-        public Deck(string Name)
+        public Deck(string name)
         {
-            items = new List<Card>();
-            name = Name;
+            Items = new List<Card>();
+            Name = name;
         }
 
-        public bool isEmpty()
+        public bool IsEmpty()
         {
-            return items.Count == 0;
+            return Items.Count == 0;
         }
 
-        public Card topCard()
+        public Card TopCard()
         {
-            if (isEmpty())
-                return Card.EmptyCard();
-            else
-                return items[items.Count - 1];
+            return IsEmpty() ? Card.EmptyCard() : Items[Items.Count - 1];
         }
 
-        public virtual bool canPutOnTop(Card newCard)
+        public virtual bool CanPutOnTop(Card newCard)
         {
             return false;
         }
 
-        public void add(Card newCard)
+        public void Add(Card newCard)
         {
-            newCard.deckName = name;
-            items.Add(newCard);
+            newCard.DeckName = Name;
+            Items.Add(newCard);
         }
 
-        public void remove()
+        public void Remove()
         {
-            if (!isEmpty())
+            if (!IsEmpty())
             {
-                items.RemoveAt(items.Count - 1);
+                Items.RemoveAt(Items.Count - 1);
             }
         }
 
-        public void moveTo(Deck deck)
+        public void MoveTo(Deck deck)
         {
-            if (topCard().value > 0)
+            if (TopCard().Value > 0)
             {
-                deck.add(topCard());
-                remove();
+                deck.Add(TopCard());
+                Remove();
             }
         }
 
-        public virtual bool tryMove(Deck deck)
+        public virtual bool TryMove(Deck deck)
         {
-            if (deck.canPutOnTop(topCard()))
+            if (deck.CanPutOnTop(TopCard()))
             {
-                moveTo(deck);
+                MoveTo(deck);
                 return true;
             }
-            else return false;
+            return false;
         }
 
-        public int count()
+        public int Count()
         {
-            return items.Count;
+            return Items.Count;
         }
 
         public void Clear()
         {
-            items.Clear();
+            Items.Clear();
         }
     }
 }

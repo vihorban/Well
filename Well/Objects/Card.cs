@@ -1,46 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Well.Properties;
 
 namespace Well.Objects
 {
     public class Card
     {
-        public int value;
-        public SuitEnum suit;
-        public string deckName;
+        public const string ExtensionPng = ".png";
+        public string DeckName;
+        public SuitEnum Suit;
+        public int Value;
 
-        public string path(string folder)
+        public string Path(string folder)
         {
-            string extension = ".png";
             string result = folder;
-            if (value > 0)
+            if (Value > 0)
             {
-                result += value.ToString() + suit.ToString() + extension;
+                result += Value + Suit.ToString() + ExtensionPng;
             }
-            else if (value == -1)
-                result = "commonCards/None" + Properties.Settings.Default.ZeroCardSelectedNumber.ToString() + extension;
-            else if (value == -2)
-                result = "commonCards/Back" + Properties.Settings.Default.BackSuitSelectedNumber.ToString() + extension;
             else
-                result = "commonCards/Empty" + Properties.Settings.Default.EmptyCardSelectedNumber.ToString() + extension;
+                switch (Value)
+                {
+                    case -1:
+                        result = "commonCards/None" + Settings.Default.ZeroCardSelectedNumber + ExtensionPng;
+                        break;
+                    case -2:
+                        result = "commonCards/Back" + Settings.Default.BackSuitSelectedNumber + ExtensionPng;
+                        break;
+                    default:
+                        result = "commonCards/Empty" + Settings.Default.EmptyCardSelectedNumber + ExtensionPng;
+                        break;
+                }
             return result;
         }
 
         public static Card EmptyCard()
         {
-            return new Card() { value = 0, suit= SuitEnum.Any, deckName = "Any" };
+            return new Card {Value = 0, Suit = SuitEnum.Any, DeckName = "Any"};
         }
 
         public static Card ZeroCard()
         {
-            return new Card() { value = -1, suit = SuitEnum.Any, deckName = "Any" };
+            return new Card {Value = -1, Suit = SuitEnum.Any, DeckName = "Any"};
         }
 
         public static Card BackCard()
         {
-            return new Card() { value = -2, suit = SuitEnum.Any, deckName = "Any" };
+            return new Card {Value = -2, Suit = SuitEnum.Any, DeckName = "Any"};
         }
     }
 }

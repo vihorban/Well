@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Well.Objects
+﻿namespace Well.Objects
 {
     public class BackDeck : Deck
     {
         public BackDeck()
-            : base()
         {
         }
 
@@ -17,12 +11,9 @@ namespace Well.Objects
         {
         }
 
-        public Card viewCard()
+        public Card ViewCard()
         {
-            if (isEmpty())
-                return Card.ZeroCard();
-            else
-                return Card.BackCard();
+            return IsEmpty() ? Card.ZeroCard() : Card.BackCard();
         }
     }
 }

@@ -11,16 +11,16 @@
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="local:CustomCommands.Exit" Executed="menuItemExit_Click"/>
-        <CommandBinding Command="local:CustomCommands.Cancel_Step" Executed="menuItemCancelStep_Click"/>
-        <CommandBinding Command="local:CustomCommands.New_Game" Executed="menuItemNewGame_Click"/>
+        <CommandBinding Command="local:CustomCommands.CancelStep" Executed="menuItemCancelStep_Click"/>
+        <CommandBinding Command="local:CustomCommands.NewGame" Executed="menuItemNewGame_Click"/>
         <CommandBinding Command="local:CustomCommands.Settings" Executed="menuItemPreferences_Click"/>
         <CommandBinding Command="local:CustomCommands.About" Executed="menuItemAbout_Click"/>
         <CommandBinding Command="local:CustomCommands.RestoreDefault" Executed="menuItemResetDefault_Click"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="Esc" Command="local:CustomCommands.Exit"/>
-        <KeyBinding Key="Z" Modifiers="Control"  Command="local:CustomCommands.Cancel_Step"/>
-        <KeyBinding Key="F2" Command="local:CustomCommands.New_Game"/>
+        <KeyBinding Key="Z" Modifiers="Control"  Command="local:CustomCommands.CancelStep"/>
+        <KeyBinding Key="F2" Command="local:CustomCommands.NewGame"/>
         <KeyBinding Key="P" Command="local:CustomCommands.Settings"/>
         <KeyBinding Key="F3" Command="local:CustomCommands.About"/>
         <KeyBinding Key="P" Modifiers="Shift" Command="local:CustomCommands.RestoreDefault"/>

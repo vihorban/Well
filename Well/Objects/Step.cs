@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Well.Objects
 {
@@ -13,14 +10,16 @@ namespace Well.Objects
 
     public class Step
     {
-        public List<Movement> movements;
+        public List<Movement> Movements;
+
         public Step()
         {
-            movements = new List<Movement>();
+            Movements = new List<Movement>();
         }
-        public void add(string from, string to)
+
+        public void Add(string from, string to)
         {
-            movements.Add(new Movement { From = from, To = to });
+            Movements.Add(new Movement {From = from, To = to});
         }
     }
 }

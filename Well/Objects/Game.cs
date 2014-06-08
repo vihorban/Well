@@ -1,300 +1,291 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Well.Properties;
 
 namespace Well.Objects
 {
     public class Game : Observable
     {
-        public List<Card> generalDeck;
+        public BackDeck BackDeck;
+        public BorderChestDeck[] BorderChestDecks;
+        public List<Card> GeneralDeck;
+        public bool IsGameOver;
+        public bool IsSomethingSelected;
+        public MiddleChestDeck[] MiddleChestDecks;
+        public int NumOfGeneratedDecks;
+        public ResultDeck[] ResultDecks;
+        public Deck Selected;
 
-        public BackDeck backDeck;
-        public BorderChestDeck[] borderChestDecks;
-        public MiddleChestDeck[] middleChestDecks;
-        public ResultDeck[] resultDecks;
-        public TopDeck[] topDecks;
-        public WarehouseDeck warehouseDeck;
-        public Deck selected;
+        public List<Step> Steps;
+        public int TopCount;
+        public TopDeck[] TopDecks;
+        public WarehouseDeck WarehouseDeck;
 
-        public bool isSomethingSelected;
-        public int topCount;
-        public int numOfGeneratedDecks;
-        public bool isGameOver;
-
-        public List<Step> steps;
-
-        private OptionsViewModel options;
-
-        private string folder
-        {
-            get
-            {
-                return "cards"+ Properties.Settings.Default.CardStyleSelectedNumber.ToString() + "\\";
-            }
-        }
+        private OptionsViewModel _options;
 
         public Game()
         {
-            options = new OptionsViewModel();
-            options.Language = options.Language;
-            generalDeck = new List<Card>();
-            backDeck = new BackDeck("Back");
-            borderChestDecks = new BorderChestDeck[4];
+            _options = new OptionsViewModel();
+            _options.Language = _options.Language;
+            GeneralDeck = new List<Card>();
+            BackDeck = new BackDeck("Back");
+            BorderChestDecks = new BorderChestDeck[4];
             for (int i = 0; i < 4; i++)
             {
-                borderChestDecks[i] = new BorderChestDeck("B" + i.ToString());
+                BorderChestDecks[i] = new BorderChestDeck("B" + i);
             }
-            middleChestDecks = new MiddleChestDeck[4];
+            MiddleChestDecks = new MiddleChestDeck[4];
             for (int i = 0; i < 4; i++)
             {
-                middleChestDecks[i] = new MiddleChestDeck("M" + i.ToString());
+                MiddleChestDecks[i] = new MiddleChestDeck("M" + i);
             }
-            resultDecks = new ResultDeck[4];
+            ResultDecks = new ResultDeck[4];
             for (int i = 0; i < 4; i++)
             {
-                resultDecks[i] = new ResultDeck("R" + i.ToString());
+                ResultDecks[i] = new ResultDeck("R" + i);
             }
-            topDecks = new TopDeck[5];
+            TopDecks = new TopDeck[5];
             for (int i = 0; i < 5; i++)
             {
-                topDecks[i] = new TopDeck("T" + i.ToString());
+                TopDecks[i] = new TopDeck("T" + i);
             }
-            warehouseDeck = new WarehouseDeck("W0");
-            selected = new Deck();
-            topCount = 5;
-            numOfGeneratedDecks = 2;
-            isGameOver = false;
-            isSomethingSelected = false;
-            steps = new List<Step>();
+            WarehouseDeck = new WarehouseDeck("W0");
+            Selected = new Deck();
+            TopCount = 5;
+            NumOfGeneratedDecks = 2;
+            IsGameOver = false;
+            IsSomethingSelected = false;
+            Steps = new List<Step>();
         }
 
-        public Step lastStep()
+        private string folder
         {
-            return steps[steps.Count - 1];
+            get { return "cards" + Settings.Default.CardStyleSelectedNumber + "\\"; }
         }
-        
-        public void generateGeneralDeck()
+
+        public Step LastStep()
         {
-            SuitEnum[] suits = { SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds };
-            for (int k = 0; k < numOfGeneratedDecks; k++)
+            return Steps[Steps.Count - 1];
+        }
+
+        public void GenerateGeneralDeck()
+        {
+            SuitEnum[] suits = {SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds};
+            for (int k = 0; k < NumOfGeneratedDecks; k++)
             {
-
                 for (int i = 1; i < 14; ++i)
                 {
                     foreach (SuitEnum s in suits)
                     {
-                        generalDeck.Add(new Card { value = i, suit = s, deckName = "Unknown" });
+                        GeneralDeck.Add(new Card {Value = i, Suit = s, DeckName = "Unknown"});
                     }
                 }
-                    
             }
-
         }
 
         public void Clear()
         {
-            generalDeck.Clear();
-            backDeck.Clear();
-            warehouseDeck.Clear();
-            selected.Clear();
-            foreach (var s in borderChestDecks)
+            GeneralDeck.Clear();
+            BackDeck.Clear();
+            WarehouseDeck.Clear();
+            Selected.Clear();
+            foreach (BorderChestDeck s in BorderChestDecks)
                 s.Clear();
-            foreach (var s in middleChestDecks)
+            foreach (MiddleChestDeck s in MiddleChestDecks)
                 s.Clear();
-            foreach (var s in resultDecks)
+            foreach (ResultDeck s in ResultDecks)
                 s.Clear();
-            foreach (var s in topDecks)
+            foreach (TopDeck s in TopDecks)
                 s.Clear();
         }
 
-        public void newGame()
+        public void NewGame()
         {
             Clear();
-            generateGeneralDeck();
-            Random random = new Random();
+            GenerateGeneralDeck();
+            var random = new Random();
             for (int i = 0; i < 4; ++i)
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    int left = generalDeck.Count + options.Difficulty - 60;
+                    int left = GeneralDeck.Count + _options.Difficulty - 60;
                     int index = random.Next(0, left);
-                    Card addCard = generalDeck[index];
-                    middleChestDecks[i].add(addCard);
-                    generalDeck.RemoveAt(index);
+                    Card addCard = GeneralDeck[index];
+                    MiddleChestDecks[i].Add(addCard);
+                    GeneralDeck.RemoveAt(index);
                 }
             }
             for (int i = 0; i < 4; ++i)
             {
-                int left = generalDeck.Count + options.Difficulty - 60;
+                int left = GeneralDeck.Count + _options.Difficulty - 60;
                 int index = random.Next(0, left);
-                borderChestDecks[i].add(generalDeck[index]);
-                generalDeck.RemoveAt(index);
+                BorderChestDecks[i].Add(GeneralDeck[index]);
+                GeneralDeck.RemoveAt(index);
             }
-            while (generalDeck.Count > 0)
+            while (GeneralDeck.Count > 0)
             {
-                int left = generalDeck.Count;
+                int left = GeneralDeck.Count;
                 int index = random.Next(0, left);
-                backDeck.add(generalDeck[index]);
-                generalDeck.RemoveAt(index);
+                BackDeck.Add(GeneralDeck[index]);
+                GeneralDeck.RemoveAt(index);
             }
-            topCount = 5;
-            isGameOver = false;
-            isSomethingSelected = false;
-            SuitEnum[] suits = { SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds };
-            List<SuitEnum> availableSuits = new List<SuitEnum>(suits);
-            foreach (var s in resultDecks)
+            TopCount = 5;
+            IsGameOver = false;
+            IsSomethingSelected = false;
+            SuitEnum[] suits = {SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds};
+            var availableSuits = new List<SuitEnum>(suits);
+            foreach (ResultDeck s in ResultDecks)
             {
-                s.availableSuits = availableSuits;
+                s.AvailableSuits = availableSuits;
             }
-            steps.Clear();
+            Steps.Clear();
             NotifyCountsChanged();
             NotifyTopCardsChanged();
         }
 
-        public void releaseBackDeck()
+        public void ReleaseBackDeck()
         {
-            checkNumberOfSavedSteps();
-            addNewStep();
-            if (backDeck.isEmpty())
+            CheckNumberOfSavedSteps();
+            AddNewStep();
+            if (BackDeck.IsEmpty())
             {
-                collectBackDeck();
-                topCount--;
-                if(topCount==0)
-                    isGameOver = true;
+                CollectBackDeck();
+                TopCount--;
+                if (TopCount == 0)
+                    IsGameOver = true;
             }
-            for (int i = 0; i < topCount; i++)
+            for (int i = 0; i < TopCount; i++)
             {
-                if (!backDeck.isEmpty())
+                if (!BackDeck.IsEmpty())
                 {
-                    backDeck.moveTo(topDecks[i]);
-                    saveMovement(backDeck.name, topDecks[i].name);
+                    BackDeck.MoveTo(TopDecks[i]);
+                    SaveMovement(BackDeck.Name, TopDecks[i].Name);
                 }
             }
         }
 
-        public void collectBackDeck()
+        public void CollectBackDeck()
         {
-            while (!isTopDecksEmpty())
+            while (!IsTopDecksEmpty())
             {
                 for (int i = 4; i >= 0; i--)
                 {
-                    if (!topDecks[i].isEmpty())
+                    if (!TopDecks[i].IsEmpty())
                     {
-                        topDecks[i].moveTo(backDeck);
-                        saveMovement(topDecks[i].name, backDeck.name);
+                        TopDecks[i].MoveTo(BackDeck);
+                        SaveMovement(TopDecks[i].Name, BackDeck.Name);
                     }
                 }
             }
         }
 
-        public bool isTopDecksEmpty()
+        public bool IsTopDecksEmpty()
         {
-            foreach (var s in topDecks)
-                if (!s.isEmpty())
+            foreach (TopDeck s in TopDecks)
+                if (!s.IsEmpty())
                     return false;
             return true;
         }
 
-        public void changeAvailability(string nameDeck)
+        public void ChangeAvailability(string nameDeck)
         {
-            ResultDeck result = new ResultDeck();
-            foreach (var k in resultDecks)
+            var result = new ResultDeck();
+            foreach (ResultDeck k in ResultDecks)
             {
-                if (k.name == nameDeck)
+                if (k.Name == nameDeck)
                     result = k;
             }
-            foreach (var k in resultDecks)
+            foreach (ResultDeck k in ResultDecks)
             {
-                k.availableSuits = result.availableSuits;
+                k.AvailableSuits = result.AvailableSuits;
             }
         }
 
-        public void checkNumberOfSavedSteps()
+        public void CheckNumberOfSavedSteps()
         {
-            if (steps.Count > (int)options.NumberOfCancellations - 1)
-                deleteLastStep();
+            if (Steps.Count > (int) _options.NumberOfCancellations - 1)
+                DeleteLastStep();
         }
 
-        public void deleteLastStep()
+        public void DeleteLastStep()
         {
-            steps.RemoveAt(steps.Count - 1);
+            Steps.RemoveAt(Steps.Count - 1);
         }
 
-        public void addNewStep()
+        public void AddNewStep()
         {
-            steps.Add(new Step());
+            Steps.Add(new Step());
         }
 
-        public void saveMovement(string from, string to)
+        public void SaveMovement(string from, string to)
         {
-            steps[steps.Count - 1].add(from, to);
+            Steps[Steps.Count - 1].Add(from, to);
         }
 
-        public bool isGameWon()
+        public bool IsGameWon()
         {
             bool isOk = true;
             for (int i = 0; i < 4 && isOk; i++)
-                if (resultDecks[i].count() != 26)
+                if (ResultDecks[i].Count() != 26)
                     isOk = false;
             return isOk;
         }
 
-        public Deck findByName(string deckName)
+        public Deck FindByName(string deckName)
         {
-            if (warehouseDeck.name == deckName)
-                return warehouseDeck;
-            foreach (var s in borderChestDecks)
+            if (WarehouseDeck.Name == deckName)
+                return WarehouseDeck;
+            foreach (BorderChestDeck s in BorderChestDecks)
             {
-                if (s.name == deckName)
+                if (s.Name == deckName)
                     return s;
             }
-            foreach (var s in middleChestDecks)
+            foreach (MiddleChestDeck s in MiddleChestDecks)
             {
-                if (s.name == deckName)
+                if (s.Name == deckName)
                     return s;
             }
-            foreach (var s in resultDecks)
+            foreach (ResultDeck s in ResultDecks)
             {
-                if (s.name == deckName)
+                if (s.Name == deckName)
                     return s;
             }
-            foreach (var s in topDecks)
+            foreach (TopDeck s in TopDecks)
             {
-                if (s.name == deckName)
+                if (s.Name == deckName)
                     return s;
             }
-            return backDeck;
+            return BackDeck;
         }
 
-        public void restoreLastStep()
+        public void RestoreLastStep()
         {
-            if (steps.Count > 0)
+            if (Steps.Count > 0)
             {
-                Step lStep = lastStep();
+                Step lStep = LastStep();
                 bool topCountChangeChecked = false;
-                for (int i = lStep.movements.Count - 1; i >= 0; i--)
+                for (int i = lStep.Movements.Count - 1; i >= 0; i--)
                 {
-                    string from = lStep.movements[i].From;
-                    string to = lStep.movements[i].To;
-                    Deck deckFrom = findByName(from);
-                    Deck deckTo = findByName(to);
-                    if (to[0] == 'R' && deckTo.count() == 1)
+                    string from = lStep.Movements[i].From;
+                    string to = lStep.Movements[i].To;
+                    Deck deckFrom = FindByName(from);
+                    Deck deckTo = FindByName(to);
+                    if (to[0] == 'R' && deckTo.Count() == 1)
                     {
-                        SuitEnum restoredSuit = deckTo.topCard().suit;
-                        foreach (var s in resultDecks)
+                        SuitEnum restoredSuit = deckTo.TopCard().Suit;
+                        foreach (ResultDeck s in ResultDecks)
                         {
-                            s.availableSuits.Add(restoredSuit);
+                            s.AvailableSuits.Add(restoredSuit);
                         }
                     }
                     if (!topCountChangeChecked && to[0] == 'B' && to[1] == 'a')
                     {
-                        topCount++;
+                        TopCount++;
                         topCountChangeChecked = true;
                     }
-                    deckTo.moveTo(deckFrom);
+                    deckTo.MoveTo(deckFrom);
                 }
-                deleteLastStep();
+                DeleteLastStep();
                 NotifyCountsChanged();
                 NotifyTopCardsChanged();
             }
@@ -308,323 +299,152 @@ namespace Well.Objects
 
         public OptionsViewModel Options
         {
-            get
-            {
-                return options;
-            }
+            get { return _options; }
             set
             {
-                options = value;
+                _options = value;
                 NotifyPropertyChanged("Options");
             }
         }
 
         public int LeftBorderNum
         {
-            get 
-            {
-                return borderChestDecks[0].count();
-            }
-            set
-            {
-            }
+            get { return BorderChestDecks[0].Count(); }
         }
 
         public int TopBorderNum
         {
-            get
-            {
-                return borderChestDecks[1].count();
-            }
-            set
-            {
-            }
+            get { return BorderChestDecks[1].Count(); }
         }
 
         public int RightBorderNum
         {
-            get
-            {
-                return borderChestDecks[2].count();
-            }
-            set
-            {
-            }
+            get { return BorderChestDecks[2].Count(); }
         }
 
         public int BottomBorderNum
         {
-            get
-            {
-                return borderChestDecks[3].count();
-            }
-            set
-            {
-            }
+            get { return BorderChestDecks[3].Count(); }
         }
 
         public int LeftMiddleNum
         {
-            get
-            {
-                return middleChestDecks[0].count();
-            }
-            set
-            {
-            }
+            get { return MiddleChestDecks[0].Count(); }
         }
 
         public int TopMiddleNum
         {
-            get
-            {
-                return middleChestDecks[1].count();
-            }
-            set
-            {
-            }
+            get { return MiddleChestDecks[1].Count(); }
         }
 
         public int RightMiddleNum
         {
-            get
-            {
-                return middleChestDecks[2].count();
-            }
-            set
-            {
-            }
+            get { return MiddleChestDecks[2].Count(); }
         }
 
         public int BottomMiddleNum
         {
-            get
-            {
-                return middleChestDecks[3].count();
-            }
-            set
-            {
-            }
+            get { return MiddleChestDecks[3].Count(); }
         }
 
         public string BackImageSource
         {
-            get
-            {
-                return backDeck.viewCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return BackDeck.ViewCard().Path(folder); }
         }
 
         public string Top1ImageSource
         {
-            get
-            {
-                return topDecks[0].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return TopDecks[0].TopCard().Path(folder); }
         }
 
         public string Top2ImageSource
         {
-            get
-            {
-                return topDecks[1].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return TopDecks[1].TopCard().Path(folder); }
         }
 
         public string Top3ImageSource
         {
-            get
-            {
-                return topDecks[2].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return TopDecks[2].TopCard().Path(folder); }
         }
 
         public string Top4ImageSource
         {
-            get
-            {
-                return topDecks[3].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return TopDecks[3].TopCard().Path(folder); }
         }
 
         public string Top5ImageSource
         {
-            get
-            {
-                return topDecks[4].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return TopDecks[4].TopCard().Path(folder); }
         }
 
         public string WarehouseImageSource
         {
-            get
-            {
-                return warehouseDeck.topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return WarehouseDeck.TopCard().Path(folder); }
         }
 
         public string LeftBorderImageSource
         {
-            get
-            {
-                return borderChestDecks[0].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return BorderChestDecks[0].TopCard().Path(folder); }
         }
 
         public string TopBorderImageSource
         {
-            get
-            {
-                return borderChestDecks[1].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return BorderChestDecks[1].TopCard().Path(folder); }
         }
 
         public string RightBorderImageSource
         {
-            get
-            {
-                return borderChestDecks[2].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return BorderChestDecks[2].TopCard().Path(folder); }
         }
 
         public string BottomBorderImageSource
         {
-            get
-            {
-                return borderChestDecks[3].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return BorderChestDecks[3].TopCard().Path(folder); }
         }
 
         public string LeftMiddleImageSource
         {
-            get
-            {
-                return middleChestDecks[0].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return MiddleChestDecks[0].TopCard().Path(folder); }
         }
 
         public string TopMiddleImageSource
         {
-            get
-            {
-                return middleChestDecks[1].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return MiddleChestDecks[1].TopCard().Path(folder); }
         }
 
         public string RightMiddleImageSource
         {
-            get
-            {
-                return middleChestDecks[2].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return MiddleChestDecks[2].TopCard().Path(folder); }
         }
 
         public string BottomMiddleImageSource
         {
-            get
-            {
-                return middleChestDecks[3].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return MiddleChestDecks[3].TopCard().Path(folder); }
         }
 
         public string LeftTopResultImageSource
         {
-            get
-            {
-                return resultDecks[0].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return ResultDecks[0].TopCard().Path(folder); }
         }
 
         public string RightTopResultImageSource
         {
-            get
-            {
-                return resultDecks[1].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return ResultDecks[1].TopCard().Path(folder); }
         }
 
         public string RightBottomResultImageSource
         {
-            get
-            {
-                return resultDecks[2].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return ResultDecks[2].TopCard().Path(folder); }
         }
 
         public string LeftBottomResultImageSource
         {
-            get
-            {
-                return resultDecks[3].topCard().path(folder);
-            }
-            set
-            {
-            }
+            get { return ResultDecks[3].TopCard().Path(folder); }
         }
 
         public bool IsCancelEnabled
         {
-            get
-            {
-                return steps.Count > 0 && !isGameOver;
-            }
-            set
-            {
-            }
+            get { return Steps.Count > 0 && !IsGameOver; }
         }
 
         #endregion

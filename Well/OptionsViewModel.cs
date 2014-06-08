@@ -1,43 +1,33 @@
-﻿using System.ComponentModel;
-using System.Globalization;
-using Well.Properties;
-using System.Threading;
-using System.Windows;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
+using System.Threading;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System;
-using System.Linq;
-using System.Text;
 using LocalizableAttribute;
-using Well.Objects;
 using PropertyTools.DataAnnotations;
+using Well.Objects;
+using Well.Properties;
 
 namespace Well
 {
     public class OptionsViewModel : Observable
     {
+        private const int NumOfBackSuits = 19;
+        private const int NumOfEmptyCards = 8;
+        private const int NumOfZeroCards = 11;
+        private const int NumOfCardStyles = 6;
+        private const string BasePath = "pack://application:,,,";
+
         private Settings Settings
         {
-            get
-            {
-                return Settings.Default;
-            }
-        }
-
-        private const int numOfBackSuits = 19;
-        private const int numOfEmptyCards = 8;
-        private const int numOfZeroCards = 11;
-        private const int numOfCardStyles = 6;
-
-        public void ResetDefault()
-        {
-            Settings.Reset();
+            get { return Settings.Default; }
         }
 
         [LocalizableCategory("Design|Color")]
         [LocalizableDisplayName("BackgroundColor")]
-        public System.Windows.Media.Color BackgroundColor
+        public Color BackgroundColor
         {
             get { return Settings.BackgroundColor; }
             set
@@ -49,7 +39,7 @@ namespace Well
 
         [LocalizableCategory("Design|Color")]
         [LocalizableDisplayName("SelectColor")]
-        public System.Windows.Media.Color SelectColor
+        public Color SelectColor
         {
             get { return Settings.SelectColor; }
             set
@@ -61,7 +51,7 @@ namespace Well
 
         [LocalizableCategory("Design|Color")]
         [LocalizableDisplayName("CasualBorderColor")]
-        public System.Windows.Media.Color CasualBorderColor
+        public Color CasualBorderColor
         {
             get { return Settings.CasualBorderColor; }
             set
@@ -73,7 +63,7 @@ namespace Well
 
         [LocalizableCategory("Design|Color")]
         [LocalizableDisplayName("DeckLightningColor")]
-        public System.Windows.Media.Color DeckLightningColor
+        public Color DeckLightningColor
         {
             get { return Settings.DeckLightningColor; }
             set
@@ -85,7 +75,7 @@ namespace Well
 
         [LocalizableCategory("Design|Color")]
         [LocalizableDisplayName("WrongColor")]
-        public System.Windows.Media.Color WrongColor
+        public Color WrongColor
         {
             get { return Settings.WrongColor; }
             set
@@ -97,7 +87,7 @@ namespace Well
 
         [LocalizableCategory("Design|Color")]
         [LocalizableDisplayName("SuccessColor")]
-        public System.Windows.Media.Color SuccessColor
+        public Color SuccessColor
         {
             get { return Settings.SuccessColor; }
             set
@@ -146,7 +136,7 @@ namespace Well
             set
             {
                 Settings.Language = value;
-                CultureInfo cultureInfo = new CultureInfo(LanguageCode.getCode(value));
+                var cultureInfo = new CultureInfo(LanguageCode.GetCode(value));
                 Thread.CurrentThread.CurrentUICulture = cultureInfo;
                 NotifyPropertyChanged("Language");
             }
@@ -156,10 +146,7 @@ namespace Well
         [LocalizableDisplayName("Compact menu")]
         public bool CompactMenu
         {
-            get
-            {
-                return Settings.CompactMenu;
-            }
+            get { return Settings.CompactMenu; }
             set
             {
                 Settings.CompactMenu = value;
@@ -172,13 +159,10 @@ namespace Well
         {
             get
             {
-                List<string> items = new List<string>();
-                for (int i = 0; i < numOfCardStyles; i++)
+                var items = new List<string>();
+                for (int i = 0; i < NumOfCardStyles; i++)
                     items.Add(new CardStyleListItem(i).ToString());
                 return items;
-            }
-            set
-            {
             }
         }
 
@@ -187,13 +171,10 @@ namespace Well
         [ItemsSourceProperty("CardStyleItemsDescription")]
         public string CardStyle
         {
-            get
-            {
-                return CardStyleItemsDescription[Settings.CardStyleSelectedNumber];
-            }
+            get { return CardStyleItemsDescription[Settings.CardStyleSelectedNumber]; }
             set
             {
-                for (int i = 0; i < numOfCardStyles; i++)
+                for (int i = 0; i < NumOfCardStyles; i++)
                 {
                     if (CardStyleItemsDescription[i] == value)
                     {
@@ -212,11 +193,8 @@ namespace Well
         {
             get
             {
-                string folder = "/cards" + Settings.CardStyleSelectedNumber.ToString() + "/";
-                return ImageMerger.merge(folder);
-            }
-            set
-            {
+                string folder = "/cards" + Settings.CardStyleSelectedNumber + "/";
+                return ImageMerger.Merge(folder);
             }
         }
 
@@ -225,13 +203,10 @@ namespace Well
         {
             get
             {
-                List<string> items = new List<string>();
-                for (int i = 0; i < numOfBackSuits; i++)
+                var items = new List<string>();
+                for (int i = 0; i < NumOfBackSuits; i++)
                     items.Add(new BackSuitListItem(i).ToString());
                 return items;
-            }
-            set
-            {
             }
         }
 
@@ -240,13 +215,10 @@ namespace Well
         [ItemsSourceProperty("BackSuitItemsDescription")]
         public string BackSuit
         {
-            get
-            {
-                return BackSuitItemsDescription[Settings.BackSuitSelectedNumber];
-            }
+            get { return BackSuitItemsDescription[Settings.BackSuitSelectedNumber]; }
             set
             {
-                for (int i = 0; i < numOfBackSuits; i++)
+                for (int i = 0; i < NumOfBackSuits; i++)
                 {
                     if (BackSuitItemsDescription[i] == value)
                     {
@@ -265,12 +237,9 @@ namespace Well
         {
             get
             {
-                string path = "/" + Card.BackCard().path("");
-                Uri uri = new Uri("pack://application:,,," + path);
+                string path = "/" + Card.BackCard().Path("");
+                var uri = new Uri(BasePath + path);
                 return new BitmapImage(uri);
-            }
-            set
-            {
             }
         }
 
@@ -279,13 +248,10 @@ namespace Well
         {
             get
             {
-                List<string> items = new List<string>();
-                for (int i = 0; i < numOfZeroCards; i++)
+                var items = new List<string>();
+                for (int i = 0; i < NumOfZeroCards; i++)
                     items.Add(new ZeroCardListItem(i).ToString());
                 return items;
-            }
-            set
-            {
             }
         }
 
@@ -294,13 +260,10 @@ namespace Well
         [ItemsSourceProperty("ZeroCardItemsDescription")]
         public string ZeroCard
         {
-            get
-            {
-                return ZeroCardItemsDescription[Settings.ZeroCardSelectedNumber];
-            }
+            get { return ZeroCardItemsDescription[Settings.ZeroCardSelectedNumber]; }
             set
             {
-                for (int i = 0; i < numOfZeroCards; i++)
+                for (int i = 0; i < NumOfZeroCards; i++)
                 {
                     if (ZeroCardItemsDescription[i] == value)
                     {
@@ -319,12 +282,9 @@ namespace Well
         {
             get
             {
-                string path = "/" + Card.ZeroCard().path("");
-                Uri uri = new Uri("pack://application:,,," + path);
+                string path = "/" + Card.ZeroCard().Path("");
+                var uri = new Uri(BasePath + path);
                 return new BitmapImage(uri);
-            }
-            set
-            {
             }
         }
 
@@ -333,13 +293,10 @@ namespace Well
         {
             get
             {
-                List<string> items = new List<string>();
-                for (int i = 0; i < numOfEmptyCards; i++)
+                var items = new List<string>();
+                for (int i = 0; i < NumOfEmptyCards; i++)
                     items.Add(new EmptyCardListItem(i).ToString());
                 return items;
-            }
-            set
-            {
             }
         }
 
@@ -348,13 +305,10 @@ namespace Well
         [ItemsSourceProperty("EmptyCardItemsDescription")]
         public string EmptyCard
         {
-            get
-            {
-                return EmptyCardItemsDescription[Settings.EmptyCardSelectedNumber];
-            }
+            get { return EmptyCardItemsDescription[Settings.EmptyCardSelectedNumber]; }
             set
             {
-                for (int i = 0; i < numOfEmptyCards; i++)
+                for (int i = 0; i < NumOfEmptyCards; i++)
                 {
                     if (EmptyCardItemsDescription[i] == value)
                     {
@@ -373,13 +327,15 @@ namespace Well
         {
             get
             {
-                string path = "/" + Card.EmptyCard().path("");
-                Uri uri = new Uri("pack://application:,,," + path);
+                string path = "/" + Card.EmptyCard().Path("");
+                var uri = new Uri(BasePath + path);
                 return new BitmapImage(uri);
             }
-            set
-            {
-            }
+        }
+
+        public void ResetDefault()
+        {
+            Settings.Reset();
         }
 
         public void Save()

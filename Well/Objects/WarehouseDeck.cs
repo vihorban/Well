@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Well.Objects
+﻿namespace Well.Objects
 {
     public class WarehouseDeck : Deck
     {
         public WarehouseDeck()
-            : base()
         {
         }
 
-        public WarehouseDeck(string Name)
-            : base(Name)
+        public WarehouseDeck(string name)
+            : base(name)
         {
         }
 
-        public override bool canPutOnTop(Card newCard)
+        public override bool CanPutOnTop(Card newCard)
         {
-            if (newCard.value == topCard().value + 1 && newCard.suit == topCard().suit)
+            if (newCard.Value == TopCard().Value + 1 && newCard.Suit == TopCard().Suit)
                 return true;
-            if (((topCard().value == 13 && newCard.suit == topCard().suit) || topCard().value == 0) && newCard.value == 1)
+            if (((TopCard().Value == 13 && newCard.Suit == TopCard().Suit) || TopCard().Value == 0) &&
+                newCard.Value == 1)
                 return true;
             return false;
         }

@@ -30,7 +30,7 @@ namespace Well
             dict = new ResourceDictionary();
             myGame = new Game();
             this.DataContext = myGame;
-            myGame.newGame();
+            myGame.NewGame();
             this.SetLanguageDictionary();
         }
 
@@ -58,28 +58,28 @@ namespace Well
 
         public void checkGameOver()
         {
-            if (myGame.isGameOver)
+            if (myGame.IsGameOver)
                 MessageBox.Show(FindResource("GameOverMessage").ToString());
         }
 
         public void checkWin()
         {
-            if (myGame.isGameWon())
+            if (myGame.IsGameWon())
                 MessageBox.Show(FindResource("GameWinMessage").ToString());
         }
 
         private void imageBack_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (myGame.isSomethingSelected)
+            if (myGame.IsSomethingSelected)
             {
                 makeWrongSelection(borderImageBack);
                 makeUsualBorder(selectedBorder);
-                myGame.isSomethingSelected = false;
+                myGame.IsSomethingSelected = false;
             }
             else
             {
                 makeBackDeckLighted(borderImageBack);
-                myGame.releaseBackDeck();
+                myGame.ReleaseBackDeck();
                 myGame.NotifyTopCardsChanged();
                 checkGameOver();
             }
@@ -148,20 +148,20 @@ namespace Well
 
         private void imageWarehouse_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageWarehouse, myGame.warehouseDeck);
+            makeStep(borderImageWarehouse, myGame.WarehouseDeck);
         }
 
         private void makeStep(Border border, Deck deck)
         {
-            if (myGame.isSomethingSelected)
+            if (myGame.IsSomethingSelected)
             {
-                if (myGame.selected.tryMove(deck))
+                if (myGame.Selected.TryMove(deck))
                 {
-                    if (deck.name[0] == 'R' && deck.count() == 1)
-                        myGame.changeAvailability(deck.name);
-                    myGame.checkNumberOfSavedSteps();
-                    myGame.addNewStep();
-                    myGame.saveMovement(myGame.selected.name, deck.name);
+                    if (deck.Name[0] == 'R' && deck.Count() == 1)
+                        myGame.ChangeAvailability(deck.Name);
+                    myGame.CheckNumberOfSavedSteps();
+                    myGame.AddNewStep();
+                    myGame.SaveMovement(myGame.Selected.Name, deck.Name);
                     myGame.NotifyTopCardsChanged();
                     myGame.NotifyCountsChanged();
                     makeUsualBorder(selectedBorder);
@@ -172,12 +172,12 @@ namespace Well
                     makeUsualBorder(selectedBorder);
                     makeWrongSelection(border);
                 }
-                myGame.isSomethingSelected = false;
+                myGame.IsSomethingSelected = false;
             }
             else
             {
-                myGame.isSomethingSelected = true;
-                myGame.selected = deck;
+                myGame.IsSomethingSelected = true;
+                myGame.Selected = deck;
                 selectedBorder= border;
                 makeSelected(selectedBorder);
             }
@@ -186,92 +186,92 @@ namespace Well
 
         private void imageTop1_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageTop1, myGame.topDecks[0]);
+            makeStep(borderImageTop1, myGame.TopDecks[0]);
         }
 
         private void imageTop2_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageTop2, myGame.topDecks[1]);
+            makeStep(borderImageTop2, myGame.TopDecks[1]);
         }
 
         private void imageTop3_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageTop3, myGame.topDecks[2]);
+            makeStep(borderImageTop3, myGame.TopDecks[2]);
         }
 
         private void imageTop4_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageTop4, myGame.topDecks[3]);
+            makeStep(borderImageTop4, myGame.TopDecks[3]);
         }
 
         private void imageTop5_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageTop5, myGame.topDecks[4]);
+            makeStep(borderImageTop5, myGame.TopDecks[4]);
         }
 
         private void imageTopBorder_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageTopBorder, myGame.borderChestDecks[1]);
+            makeStep(borderImageTopBorder, myGame.BorderChestDecks[1]);
         }
 
         private void imageTopMiddle_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageTopMiddle, myGame.middleChestDecks[1]);
+            makeStep(borderImageTopMiddle, myGame.MiddleChestDecks[1]);
         }
 
         private void imageLeftTopResult_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageLeftTopResult, myGame.resultDecks[0]);
+            makeStep(borderImageLeftTopResult, myGame.ResultDecks[0]);
         }
 
         private void imageRightTopResult_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageRightTopResult, myGame.resultDecks[1]);
+            makeStep(borderImageRightTopResult, myGame.ResultDecks[1]);
         }
 
         private void imageLeftBorder_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageLeftBorder, myGame.borderChestDecks[0]);
+            makeStep(borderImageLeftBorder, myGame.BorderChestDecks[0]);
         }
 
         private void imageLeftMiddle_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageLeftMiddle, myGame.middleChestDecks[0]);
+            makeStep(borderImageLeftMiddle, myGame.MiddleChestDecks[0]);
         }
 
         private void imageRightMiddle_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageRightMiddle, myGame.middleChestDecks[2]);
+            makeStep(borderImageRightMiddle, myGame.MiddleChestDecks[2]);
         }
 
         private void imageRightBorder_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageRightBorder, myGame.borderChestDecks[2]);
+            makeStep(borderImageRightBorder, myGame.BorderChestDecks[2]);
         }
 
         private void imageBottomMiddle_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageBottomMiddle, myGame.middleChestDecks[3]);
+            makeStep(borderImageBottomMiddle, myGame.MiddleChestDecks[3]);
         }
 
         private void imageLeftBottomResult_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageLeftBottomResult, myGame.resultDecks[3]);
+            makeStep(borderImageLeftBottomResult, myGame.ResultDecks[3]);
         }
 
         private void imageRightBottomResult_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageRightBottomResult, myGame.resultDecks[2]);
+            makeStep(borderImageRightBottomResult, myGame.ResultDecks[2]);
         }
 
         private void imageBottomBorder_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageBottomBorder, myGame.borderChestDecks[3]);
+            makeStep(borderImageBottomBorder, myGame.BorderChestDecks[3]);
         }
 
         private void menuItemNewGame_Click(object sender, RoutedEventArgs e)
         {
-            myGame.newGame();
+            myGame.NewGame();
         }
 
         private void menuItemExit_Click(object sender, RoutedEventArgs e)
@@ -283,7 +283,7 @@ namespace Well
         {
             if (myGame.IsCancelEnabled)
             {
-                myGame.restoreLastStep();
+                myGame.RestoreLastStep();
             }
         }
 

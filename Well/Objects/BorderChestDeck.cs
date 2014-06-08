@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Well.Objects
+﻿namespace Well.Objects
 {
     public class BorderChestDeck : Deck
     {
         public BorderChestDeck()
-            : base()
         {
         }
-        public BorderChestDeck(string Name)
-            : base(Name)
+
+        public BorderChestDeck(string name)
+            : base(name)
         {
         }
-        public override bool canPutOnTop(Card newCard)
+
+        public override bool CanPutOnTop(Card newCard)
         {
-            if (newCard.value == topCard().value + 1 && newCard.suit == topCard().suit)
+            if (newCard.Value == TopCard().Value + 1 && newCard.Suit == TopCard().Suit)
                 return true;
-            if (newCard.value == 1 && topCard().value == 13 && newCard.suit == topCard().suit)
+            if (newCard.Value == 1 && TopCard().Value == 13 && newCard.Suit == TopCard().Suit)
                 return true;
-            if (topCard().value == 0 && newCard.deckName[0] == 'M' && newCard.deckName[1] == name[1])
-                return true;
-            return false;
+            return TopCard().Value == 0 && newCard.DeckName[0] == 'M' && newCard.DeckName[1] == Name[1];
         }
     }
 }
