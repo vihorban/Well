@@ -2,12 +2,10 @@
 {
     public class TopDeck : Deck
     {
-        public TopDeck()
-        {
-        }
+        public const string Prefix = "T";
 
-        public TopDeck(string name)
-            : base(name)
+        public TopDeck(int name)
+            : base(Prefix + name)
         {
         }
     }

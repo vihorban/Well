@@ -97,7 +97,7 @@ namespace Well
             }
         }
 
-        [Slidable(0, 60)]
+        [Slidable(0, Game.MaxDifficulty)]
         [LocalizableCategory("Difficulty|")]
         [LocalizableDisplayName("Difficulty")]
         [LocalizableDescription("DifficultyDescrition")]
@@ -109,8 +109,8 @@ namespace Well
                 Settings.Difficulty = value;
                 if (Settings.Difficulty < 0)
                     Settings.Difficulty = 0;
-                if (Settings.Difficulty > 60)
-                    Settings.Difficulty = 60;
+                if (Settings.Difficulty > Game.MaxDifficulty)
+                    Settings.Difficulty = Game.MaxDifficulty;
                 NotifyPropertyChanged("Difficulty");
             }
         }

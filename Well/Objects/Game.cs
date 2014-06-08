@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using Well.Properties;
+using System.Linq;
 
 namespace Well.Objects
 {
     public class Game : Observable
     {
-        public BackDeck BackDeck;
-        public BorderChestDeck[] BorderChestDecks;
+        public const int NumOfGeneratedDecks = 2;
+        public const int BorderCount = 10;
+        public const int MaxDifficulty = 60;
+        private readonly DeckCollection _collection;
+        private readonly SuitEnum[] _suits = {SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds};
         public List<Card> GeneralDeck;
+
         public bool IsGameOver;
         public bool IsSomethingSelected;
-        public MiddleChestDeck[] MiddleChestDecks;
-        public int NumOfGeneratedDecks;
-        public ResultDeck[] ResultDecks;
+
         public Deck Selected;
 
         public List<Step> Steps;
         public int TopCount;
-        public TopDeck[] TopDecks;
-        public WarehouseDeck WarehouseDeck;
 
         private OptionsViewModel _options;
 
@@ -28,39 +28,12 @@ namespace Well.Objects
             _options = new OptionsViewModel();
             _options.Language = _options.Language;
             GeneralDeck = new List<Card>();
-            BackDeck = new BackDeck("Back");
-            BorderChestDecks = new BorderChestDeck[4];
-            for (int i = 0; i < 4; i++)
-            {
-                BorderChestDecks[i] = new BorderChestDeck("B" + i);
-            }
-            MiddleChestDecks = new MiddleChestDeck[4];
-            for (int i = 0; i < 4; i++)
-            {
-                MiddleChestDecks[i] = new MiddleChestDeck("M" + i);
-            }
-            ResultDecks = new ResultDeck[4];
-            for (int i = 0; i < 4; i++)
-            {
-                ResultDecks[i] = new ResultDeck("R" + i);
-            }
-            TopDecks = new TopDeck[5];
-            for (int i = 0; i < 5; i++)
-            {
-                TopDecks[i] = new TopDeck("T" + i);
-            }
-            WarehouseDeck = new WarehouseDeck("W0");
+            _collection = new DeckCollection();
             Selected = new Deck();
-            TopCount = 5;
-            NumOfGeneratedDecks = 2;
             IsGameOver = false;
             IsSomethingSelected = false;
             Steps = new List<Step>();
-        }
-
-        private string folder
-        {
-            get { return "cards" + Settings.Default.CardStyleSelectedNumber + "\\"; }
+            TopCount = DeckCollection.TopCount;
         }
 
         public Step LastStep()
@@ -70,14 +43,13 @@ namespace Well.Objects
 
         public void GenerateGeneralDeck()
         {
-            SuitEnum[] suits = {SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds};
             for (int k = 0; k < NumOfGeneratedDecks; k++)
             {
-                for (int i = 1; i < 14; ++i)
+                for (int i = CardValue.Ace; i <= CardValue.King; ++i)
                 {
-                    foreach (SuitEnum s in suits)
+                    foreach (SuitEnum s in _suits)
                     {
-                        GeneralDeck.Add(new Card {Value = i, Suit = s, DeckName = "Unknown"});
+                        GeneralDeck.Add(new Card {Value = i, Suit = s, DeckName = Deck.Any});
                     }
                 }
             }
@@ -86,17 +58,11 @@ namespace Well.Objects
         public void Clear()
         {
             GeneralDeck.Clear();
-            BackDeck.Clear();
-            WarehouseDeck.Clear();
             Selected.Clear();
-            foreach (BorderChestDeck s in BorderChestDecks)
-                s.Clear();
-            foreach (MiddleChestDeck s in MiddleChestDecks)
-                s.Clear();
-            foreach (ResultDeck s in ResultDecks)
-                s.Clear();
-            foreach (TopDeck s in TopDecks)
-                s.Clear();
+            foreach (Deck deck in Collection)
+            {
+                deck.Clear();
+            }
         }
 
         public void NewGame()
@@ -104,37 +70,36 @@ namespace Well.Objects
             Clear();
             GenerateGeneralDeck();
             var random = new Random();
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < DeckCollection.MiddleCount; ++i)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < BorderCount; j++)
                 {
-                    int left = GeneralDeck.Count + _options.Difficulty - 60;
+                    int left = GeneralDeck.Count + _options.Difficulty - MaxDifficulty;
                     int index = random.Next(0, left);
                     Card addCard = GeneralDeck[index];
-                    MiddleChestDecks[i].Add(addCard);
+                    Collection.MiddleChestDecks[i].Add(addCard);
                     GeneralDeck.RemoveAt(index);
                 }
             }
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < DeckCollection.BorderCount; ++i)
             {
-                int left = GeneralDeck.Count + _options.Difficulty - 60;
+                int left = GeneralDeck.Count + _options.Difficulty - MaxDifficulty;
                 int index = random.Next(0, left);
-                BorderChestDecks[i].Add(GeneralDeck[index]);
+                Collection.BorderChestDecks[i].Add(GeneralDeck[index]);
                 GeneralDeck.RemoveAt(index);
             }
             while (GeneralDeck.Count > 0)
             {
                 int left = GeneralDeck.Count;
                 int index = random.Next(0, left);
-                BackDeck.Add(GeneralDeck[index]);
+                Collection.BackDeck.Add(GeneralDeck[index]);
                 GeneralDeck.RemoveAt(index);
             }
-            TopCount = 5;
             IsGameOver = false;
             IsSomethingSelected = false;
-            SuitEnum[] suits = {SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds};
-            var availableSuits = new List<SuitEnum>(suits);
-            foreach (ResultDeck s in ResultDecks)
+            TopCount = DeckCollection.TopCount;
+            var availableSuits = new List<SuitEnum>(_suits);
+            foreach (ResultDeck s in Collection.ResultDecks)
             {
                 s.AvailableSuits = availableSuits;
             }
@@ -147,7 +112,7 @@ namespace Well.Objects
         {
             CheckNumberOfSavedSteps();
             AddNewStep();
-            if (BackDeck.IsEmpty())
+            if (Collection.BackDeck.IsEmpty())
             {
                 CollectBackDeck();
                 TopCount--;
@@ -156,10 +121,10 @@ namespace Well.Objects
             }
             for (int i = 0; i < TopCount; i++)
             {
-                if (!BackDeck.IsEmpty())
+                if (!Collection.BackDeck.IsEmpty())
                 {
-                    BackDeck.MoveTo(TopDecks[i]);
-                    SaveMovement(BackDeck.Name, TopDecks[i].Name);
+                    Collection.BackDeck.MoveTo(Collection.TopDecks[i]);
+                    SaveMovement(Collection.BackDeck.Name, Collection.TopDecks[i].Name);
                 }
             }
         }
@@ -168,12 +133,12 @@ namespace Well.Objects
         {
             while (!IsTopDecksEmpty())
             {
-                for (int i = 4; i >= 0; i--)
+                for (int i = DeckCollection.TopCount - 1; i >= 0; i--)
                 {
-                    if (!TopDecks[i].IsEmpty())
+                    if (!Collection.TopDecks[i].IsEmpty())
                     {
-                        TopDecks[i].MoveTo(BackDeck);
-                        SaveMovement(TopDecks[i].Name, BackDeck.Name);
+                        Collection.TopDecks[i].MoveTo(Collection.BackDeck);
+                        SaveMovement(Collection.TopDecks[i].Name, Collection.BackDeck.Name);
                     }
                 }
             }
@@ -181,21 +146,19 @@ namespace Well.Objects
 
         public bool IsTopDecksEmpty()
         {
-            foreach (TopDeck s in TopDecks)
-                if (!s.IsEmpty())
-                    return false;
-            return true;
+            return Collection.TopDecks.All(s => s.IsEmpty());
         }
 
         public void ChangeAvailability(string nameDeck)
         {
-            var result = new ResultDeck();
-            foreach (ResultDeck k in ResultDecks)
+            ResultDeck result = null;
+            foreach (ResultDeck k in Collection.ResultDecks)
             {
                 if (k.Name == nameDeck)
                     result = k;
             }
-            foreach (ResultDeck k in ResultDecks)
+            if (result == null) return;
+            foreach (ResultDeck k in Collection.ResultDecks)
             {
                 k.AvailableSuits = result.AvailableSuits;
             }
@@ -224,38 +187,13 @@ namespace Well.Objects
 
         public bool IsGameWon()
         {
-            bool isOk = true;
-            for (int i = 0; i < 4 && isOk; i++)
-                if (ResultDecks[i].Count() != 26)
-                    isOk = false;
-            return isOk;
+            const int neededValue = CardValue.King*NumOfGeneratedDecks;
+            return Collection.ResultDecks.All(deck => deck.Count == neededValue);
         }
 
         public Deck FindByName(string deckName)
         {
-            if (WarehouseDeck.Name == deckName)
-                return WarehouseDeck;
-            foreach (BorderChestDeck s in BorderChestDecks)
-            {
-                if (s.Name == deckName)
-                    return s;
-            }
-            foreach (MiddleChestDeck s in MiddleChestDecks)
-            {
-                if (s.Name == deckName)
-                    return s;
-            }
-            foreach (ResultDeck s in ResultDecks)
-            {
-                if (s.Name == deckName)
-                    return s;
-            }
-            foreach (TopDeck s in TopDecks)
-            {
-                if (s.Name == deckName)
-                    return s;
-            }
-            return BackDeck;
+            return Collection[deckName];
         }
 
         public void RestoreLastStep()
@@ -270,15 +208,15 @@ namespace Well.Objects
                     string to = lStep.Movements[i].To;
                     Deck deckFrom = FindByName(from);
                     Deck deckTo = FindByName(to);
-                    if (to[0] == 'R' && deckTo.Count() == 1)
+                    if (to[0] == ResultDeck.Prefix[0] && deckTo.Count == 1)
                     {
-                        SuitEnum restoredSuit = deckTo.TopCard().Suit;
-                        foreach (ResultDeck s in ResultDecks)
+                        SuitEnum restoredSuit = deckTo.TopCard.Suit;
+                        foreach (ResultDeck s in Collection.ResultDecks)
                         {
                             s.AvailableSuits.Add(restoredSuit);
                         }
                     }
-                    if (!topCountChangeChecked && to[0] == 'B' && to[1] == 'a')
+                    if (!topCountChangeChecked && to == BackDeck.BaseName)
                     {
                         TopCount++;
                         topCountChangeChecked = true;
@@ -307,139 +245,9 @@ namespace Well.Objects
             }
         }
 
-        public int LeftBorderNum
+        public DeckCollection Collection
         {
-            get { return BorderChestDecks[0].Count(); }
-        }
-
-        public int TopBorderNum
-        {
-            get { return BorderChestDecks[1].Count(); }
-        }
-
-        public int RightBorderNum
-        {
-            get { return BorderChestDecks[2].Count(); }
-        }
-
-        public int BottomBorderNum
-        {
-            get { return BorderChestDecks[3].Count(); }
-        }
-
-        public int LeftMiddleNum
-        {
-            get { return MiddleChestDecks[0].Count(); }
-        }
-
-        public int TopMiddleNum
-        {
-            get { return MiddleChestDecks[1].Count(); }
-        }
-
-        public int RightMiddleNum
-        {
-            get { return MiddleChestDecks[2].Count(); }
-        }
-
-        public int BottomMiddleNum
-        {
-            get { return MiddleChestDecks[3].Count(); }
-        }
-
-        public string BackImageSource
-        {
-            get { return BackDeck.ViewCard().Path(folder); }
-        }
-
-        public string Top1ImageSource
-        {
-            get { return TopDecks[0].TopCard().Path(folder); }
-        }
-
-        public string Top2ImageSource
-        {
-            get { return TopDecks[1].TopCard().Path(folder); }
-        }
-
-        public string Top3ImageSource
-        {
-            get { return TopDecks[2].TopCard().Path(folder); }
-        }
-
-        public string Top4ImageSource
-        {
-            get { return TopDecks[3].TopCard().Path(folder); }
-        }
-
-        public string Top5ImageSource
-        {
-            get { return TopDecks[4].TopCard().Path(folder); }
-        }
-
-        public string WarehouseImageSource
-        {
-            get { return WarehouseDeck.TopCard().Path(folder); }
-        }
-
-        public string LeftBorderImageSource
-        {
-            get { return BorderChestDecks[0].TopCard().Path(folder); }
-        }
-
-        public string TopBorderImageSource
-        {
-            get { return BorderChestDecks[1].TopCard().Path(folder); }
-        }
-
-        public string RightBorderImageSource
-        {
-            get { return BorderChestDecks[2].TopCard().Path(folder); }
-        }
-
-        public string BottomBorderImageSource
-        {
-            get { return BorderChestDecks[3].TopCard().Path(folder); }
-        }
-
-        public string LeftMiddleImageSource
-        {
-            get { return MiddleChestDecks[0].TopCard().Path(folder); }
-        }
-
-        public string TopMiddleImageSource
-        {
-            get { return MiddleChestDecks[1].TopCard().Path(folder); }
-        }
-
-        public string RightMiddleImageSource
-        {
-            get { return MiddleChestDecks[2].TopCard().Path(folder); }
-        }
-
-        public string BottomMiddleImageSource
-        {
-            get { return MiddleChestDecks[3].TopCard().Path(folder); }
-        }
-
-        public string LeftTopResultImageSource
-        {
-            get { return ResultDecks[0].TopCard().Path(folder); }
-        }
-
-        public string RightTopResultImageSource
-        {
-            get { return ResultDecks[1].TopCard().Path(folder); }
-        }
-
-        public string RightBottomResultImageSource
-        {
-            get { return ResultDecks[2].TopCard().Path(folder); }
-        }
-
-        public string LeftBottomResultImageSource
-        {
-            get { return ResultDecks[3].TopCard().Path(folder); }
+            get { return _collection; }
         }
 
         public bool IsCancelEnabled
@@ -453,37 +261,12 @@ namespace Well.Objects
 
         public void NotifyCountsChanged()
         {
-            NotifyPropertyChanged("LeftBorderNum");
-            NotifyPropertyChanged("TopBorderNum");
-            NotifyPropertyChanged("RightBorderNum");
-            NotifyPropertyChanged("BottomBorderNum");
-            NotifyPropertyChanged("LeftMiddleNum");
-            NotifyPropertyChanged("TopMiddleNum");
-            NotifyPropertyChanged("RightMiddleNum");
-            NotifyPropertyChanged("BottomMiddleNum");
+            NotifyPropertyChanged("Collection");
         }
 
         public void NotifyTopCardsChanged()
         {
-            NotifyPropertyChanged("BackImageSource");
-            NotifyPropertyChanged("Top1ImageSource");
-            NotifyPropertyChanged("Top2ImageSource");
-            NotifyPropertyChanged("Top3ImageSource");
-            NotifyPropertyChanged("Top4ImageSource");
-            NotifyPropertyChanged("Top5ImageSource");
-            NotifyPropertyChanged("WarehouseImageSource");
-            NotifyPropertyChanged("LeftBorderImageSource");
-            NotifyPropertyChanged("TopBorderImageSource");
-            NotifyPropertyChanged("RightBorderImageSource");
-            NotifyPropertyChanged("BottomBorderImageSource");
-            NotifyPropertyChanged("LeftMiddleImageSource");
-            NotifyPropertyChanged("TopMiddleImageSource");
-            NotifyPropertyChanged("RightMiddleImageSource");
-            NotifyPropertyChanged("BottomMiddleImageSource");
-            NotifyPropertyChanged("LeftTopResultImageSource");
-            NotifyPropertyChanged("RightTopResultImageSource");
-            NotifyPropertyChanged("RightBottomResultImageSource");
-            NotifyPropertyChanged("LeftBottomResultImageSource");
+            NotifyPropertyChanged("Collection");
             NotifyPropertyChanged("IsCancelEnabled");
         }
 

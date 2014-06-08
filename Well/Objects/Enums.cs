@@ -4,6 +4,15 @@ using LocalizableAttribute;
 
 namespace Well.Objects
 {
+    public class CardValue
+    {
+        public const int Back = -2;
+        public const int None = -1;
+        public const int Empty = 0;
+        public const int King = 13;
+        public const int Ace = 1;
+    }
+
     public enum SuitEnum
     {
         Clubs,

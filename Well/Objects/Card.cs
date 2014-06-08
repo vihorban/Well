@@ -19,10 +19,10 @@ namespace Well.Objects
             else
                 switch (Value)
                 {
-                    case -1:
+                    case CardValue.None:
                         result = "commonCards/None" + Settings.Default.ZeroCardSelectedNumber + ExtensionPng;
                         break;
-                    case -2:
+                    case CardValue.Back:
                         result = "commonCards/Back" + Settings.Default.BackSuitSelectedNumber + ExtensionPng;
                         break;
                     default:
@@ -34,17 +34,17 @@ namespace Well.Objects
 
         public static Card EmptyCard()
         {
-            return new Card {Value = 0, Suit = SuitEnum.Any, DeckName = "Any"};
+            return new Card {Value = CardValue.Empty, Suit = SuitEnum.Any, DeckName = Deck.Any};
         }
 
         public static Card ZeroCard()
         {
-            return new Card {Value = -1, Suit = SuitEnum.Any, DeckName = "Any"};
+            return new Card {Value = CardValue.None, Suit = SuitEnum.Any, DeckName = Deck.Any};
         }
 
         public static Card BackCard()
         {
-            return new Card {Value = -2, Suit = SuitEnum.Any, DeckName = "Any"};
+            return new Card {Value = CardValue.Back, Suit = SuitEnum.Any, DeckName = Deck.Any};
         }
     }
 }

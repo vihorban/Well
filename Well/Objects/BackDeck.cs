@@ -2,16 +2,14 @@
 {
     public class BackDeck : Deck
     {
+        public const string BaseName = "Back";
+
         public BackDeck()
+            : base(BaseName)
         {
         }
 
-        public BackDeck(string Name)
-            : base(Name)
-        {
-        }
-
-        public Card ViewCard()
+        public override Card DisplayCard()
         {
             return IsEmpty() ? Card.ZeroCard() : Card.BackCard();
         }

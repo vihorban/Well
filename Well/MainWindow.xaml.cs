@@ -1,277 +1,188 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-using Well.Objects;
-using System.Threading;
-using System.Globalization;
 using PropertyTools.Wpf;
+using Well.Objects;
+using Well.Properties;
 
 namespace Well
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
+        public ResourceDictionary Dict;
+        public Game MyGame;
+        public Border SelectedBorder;
+
         public MainWindow()
         {
             InitializeComponent();
-            dict = new ResourceDictionary();
-            myGame = new Game();
-            this.DataContext = myGame;
-            myGame.NewGame();
-            this.SetLanguageDictionary();
+            Dict = new ResourceDictionary();
+            MyGame = new Game();
+            DataContext = MyGame;
+            MyGame.NewGame();
+            SetLanguageDictionary();
         }
-
-        public Game myGame;
-        public Border selectedBorder;
-        public ResourceDictionary dict;
 
         private void SetLanguageDictionary()
         {
-            myGame.Options.Language = Properties.Settings.Default.Language;
+            MyGame.Options.Language = Settings.Default.Language;
             switch (Thread.CurrentThread.CurrentUICulture.ToString())
             {
                 case "uk-UA":
-                    dict.Source = new Uri("..\\Resources\\LocalizationUA.xaml", UriKind.Relative);
+                    Dict.Source = new Uri("..\\Resources\\LocalizationUA.xaml", UriKind.Relative);
                     break;
                 case "ru-RU":
-                    dict.Source = new Uri("..\\Resources\\LocalizationRU.xaml", UriKind.Relative);
+                    Dict.Source = new Uri("..\\Resources\\LocalizationRU.xaml", UriKind.Relative);
                     break;
                 default:
-                    dict.Source = new Uri("..\\Resources\\LocalizationEN.xaml", UriKind.Relative);
+                    Dict.Source = new Uri("..\\Resources\\LocalizationEN.xaml", UriKind.Relative);
                     break;
             }
-            Application.Current.Resources.MergedDictionaries.Add(dict);
+            Application.Current.Resources.MergedDictionaries.Add(Dict);
         }
 
-        public void checkGameOver()
+        public void CheckGameOver()
         {
-            if (myGame.IsGameOver)
+            if (MyGame.IsGameOver)
                 MessageBox.Show(FindResource("GameOverMessage").ToString());
         }
 
-        public void checkWin()
+        public void CheckWin()
         {
-            if (myGame.IsGameWon())
+            if (MyGame.IsGameWon())
                 MessageBox.Show(FindResource("GameWinMessage").ToString());
         }
 
         private void imageBack_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (myGame.IsSomethingSelected)
+            var border = (Border) ((Image) sender).Parent;
+            if (MyGame.IsSomethingSelected)
             {
-                makeWrongSelection(borderImageBack);
-                makeUsualBorder(selectedBorder);
-                myGame.IsSomethingSelected = false;
+                MakeWrongSelection(border);
+                MakeUsualBorder(SelectedBorder);
+                MyGame.IsSomethingSelected = false;
             }
             else
             {
-                makeBackDeckLighted(borderImageBack);
-                myGame.ReleaseBackDeck();
-                myGame.NotifyTopCardsChanged();
-                checkGameOver();
+                MakeBackDeckLighted(border);
+                MyGame.ReleaseBackDeck();
+                MyGame.NotifyTopCardsChanged();
+                CheckGameOver();
             }
         }
 
-        public void makeWrongSelection(Border border)
+        public void MakeWrongSelection(Border border)
         {
-            border.BorderBrush = new SolidColorBrush(myGame.Options.WrongColor);
-            Thread t = new Thread(() =>
+            border.BorderBrush = new SolidColorBrush(MyGame.Options.WrongColor);
+            var t = new Thread(() =>
             {
                 Thread.Sleep(100);
-                borderImageBack.Dispatcher.BeginInvoke(
-                    new Action(() => border.BorderBrush = new SolidColorBrush(myGame.Options.CasualBorderColor)));
+                border.Dispatcher.BeginInvoke(
+                    new Action(() => border.BorderBrush = new SolidColorBrush(MyGame.Options.CasualBorderColor)));
                 Thread.Sleep(100);
-                borderImageBack.Dispatcher.BeginInvoke(
-                    new Action(() => border.BorderBrush = new SolidColorBrush(myGame.Options.WrongColor)));
+                border.Dispatcher.BeginInvoke(
+                    new Action(() => border.BorderBrush = new SolidColorBrush(MyGame.Options.WrongColor)));
                 Thread.Sleep(100);
-                borderImageBack.Dispatcher.BeginInvoke(
-                    new Action(() => border.BorderBrush = new SolidColorBrush(myGame.Options.CasualBorderColor)));
+                border.Dispatcher.BeginInvoke(
+                    new Action(() => border.BorderBrush = new SolidColorBrush(MyGame.Options.CasualBorderColor)));
                 Thread.Sleep(100);
-                borderImageBack.Dispatcher.BeginInvoke(
-                    new Action(() => border.BorderBrush = new SolidColorBrush(myGame.Options.WrongColor)));
+                border.Dispatcher.BeginInvoke(
+                    new Action(() => border.BorderBrush = new SolidColorBrush(MyGame.Options.WrongColor)));
                 Thread.Sleep(100);
-                borderImageBack.Dispatcher.BeginInvoke(
-                    new Action(() => border.BorderBrush = new SolidColorBrush(myGame.Options.CasualBorderColor)));
-            });
-            t.IsBackground = true;
+                border.Dispatcher.BeginInvoke(
+                    new Action(() => border.BorderBrush = new SolidColorBrush(MyGame.Options.CasualBorderColor)));
+            }) {IsBackground = true};
             t.Start();
         }
 
-        public void makeBackDeckLighted(Border border)
+        public void MakeBackDeckLighted(Border border)
         {
-            border.BorderBrush = new SolidColorBrush(myGame.Options.DeckLightningColor);
-            Thread t = new Thread(() =>
+            border.BorderBrush = new SolidColorBrush(MyGame.Options.DeckLightningColor);
+            var t = new Thread(() =>
             {
                 Thread.Sleep(500);
-                borderImageBack.Dispatcher.BeginInvoke(
-                    new Action(() => border.BorderBrush = new SolidColorBrush(myGame.Options.CasualBorderColor)));
-            });
-            t.IsBackground = true;
+                border.Dispatcher.BeginInvoke(
+                    new Action(() => border.BorderBrush = new SolidColorBrush(MyGame.Options.CasualBorderColor)));
+            }) {IsBackground = true};
             t.Start();
         }
 
-        public void makeSuccess(Border border)
+        public void MakeSuccess(Border border)
         {
-            border.BorderBrush = new SolidColorBrush(myGame.Options.SuccessColor);
-            Thread t = new Thread(() =>
+            border.BorderBrush = new SolidColorBrush(MyGame.Options.SuccessColor);
+            var t = new Thread(() =>
             {
                 Thread.Sleep(250);
-                borderImageBack.Dispatcher.BeginInvoke(
-                    new Action(() => border.BorderBrush = new SolidColorBrush(myGame.Options.CasualBorderColor)));
-            });
-            t.IsBackground = true;
+                border.Dispatcher.BeginInvoke(
+                    new Action(() => border.BorderBrush = new SolidColorBrush(MyGame.Options.CasualBorderColor)));
+            }) {IsBackground = true};
             t.Start();
         }
 
-        public void makeUsualBorder(Border border)
+        public void MakeUsualBorder(Border border)
         {
-            border.BorderBrush = new SolidColorBrush(myGame.Options.CasualBorderColor);
+            border.BorderBrush = new SolidColorBrush(MyGame.Options.CasualBorderColor);
         }
 
-        public void makeSelected(Border border)
+        public void MakeSelected(Border border)
         {
-            border.BorderBrush =  new SolidColorBrush(myGame.Options.SelectColor);
+            border.BorderBrush = new SolidColorBrush(MyGame.Options.SelectColor);
         }
 
-        private void imageWarehouse_MouseUp(object sender, MouseButtonEventArgs e)
+        private void MakeStep(Border border, Deck deck)
         {
-            makeStep(borderImageWarehouse, myGame.WarehouseDeck);
-        }
-
-        private void makeStep(Border border, Deck deck)
-        {
-            if (myGame.IsSomethingSelected)
+            if (MyGame.IsSomethingSelected)
             {
-                if (myGame.Selected.TryMove(deck))
+                if (MyGame.Selected.TryMove(deck))
                 {
-                    if (deck.Name[0] == 'R' && deck.Count() == 1)
-                        myGame.ChangeAvailability(deck.Name);
-                    myGame.CheckNumberOfSavedSteps();
-                    myGame.AddNewStep();
-                    myGame.SaveMovement(myGame.Selected.Name, deck.Name);
-                    myGame.NotifyTopCardsChanged();
-                    myGame.NotifyCountsChanged();
-                    makeUsualBorder(selectedBorder);
-                    makeSuccess(border);
+                    if (deck.Name[0] == 'R' && deck.Count == 1)
+                        MyGame.ChangeAvailability(deck.Name);
+                    MyGame.CheckNumberOfSavedSteps();
+                    MyGame.AddNewStep();
+                    MyGame.SaveMovement(MyGame.Selected.Name, deck.Name);
+                    MyGame.NotifyTopCardsChanged();
+                    MyGame.NotifyCountsChanged();
+                    MakeUsualBorder(SelectedBorder);
+                    MakeSuccess(border);
                 }
                 else
                 {
-                    makeUsualBorder(selectedBorder);
-                    makeWrongSelection(border);
+                    MakeUsualBorder(SelectedBorder);
+                    MakeWrongSelection(border);
                 }
-                myGame.IsSomethingSelected = false;
+                MyGame.IsSomethingSelected = false;
             }
             else
             {
-                myGame.IsSomethingSelected = true;
-                myGame.Selected = deck;
-                selectedBorder= border;
-                makeSelected(selectedBorder);
+                MyGame.IsSomethingSelected = true;
+                MyGame.Selected = deck;
+                SelectedBorder = border;
+                MakeSelected(SelectedBorder);
             }
-            checkWin();
+            CheckWin();
         }
 
-        private void imageTop1_MouseUp(object sender, MouseButtonEventArgs e)
+        private void image_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            makeStep(borderImageTop1, myGame.TopDecks[0]);
-        }
-
-        private void imageTop2_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageTop2, myGame.TopDecks[1]);
-        }
-
-        private void imageTop3_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageTop3, myGame.TopDecks[2]);
-        }
-
-        private void imageTop4_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageTop4, myGame.TopDecks[3]);
-        }
-
-        private void imageTop5_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageTop5, myGame.TopDecks[4]);
-        }
-
-        private void imageTopBorder_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageTopBorder, myGame.BorderChestDecks[1]);
-        }
-
-        private void imageTopMiddle_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageTopMiddle, myGame.MiddleChestDecks[1]);
-        }
-
-        private void imageLeftTopResult_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageLeftTopResult, myGame.ResultDecks[0]);
-        }
-
-        private void imageRightTopResult_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageRightTopResult, myGame.ResultDecks[1]);
-        }
-
-        private void imageLeftBorder_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageLeftBorder, myGame.BorderChestDecks[0]);
-        }
-
-        private void imageLeftMiddle_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageLeftMiddle, myGame.MiddleChestDecks[0]);
-        }
-
-        private void imageRightMiddle_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageRightMiddle, myGame.MiddleChestDecks[2]);
-        }
-
-        private void imageRightBorder_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageRightBorder, myGame.BorderChestDecks[2]);
-        }
-
-        private void imageBottomMiddle_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageBottomMiddle, myGame.MiddleChestDecks[3]);
-        }
-
-        private void imageLeftBottomResult_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageLeftBottomResult, myGame.ResultDecks[3]);
-        }
-
-        private void imageRightBottomResult_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageRightBottomResult, myGame.ResultDecks[2]);
-        }
-
-        private void imageBottomBorder_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            makeStep(borderImageBottomBorder, myGame.BorderChestDecks[3]);
+            var currentImage = (Image) sender;
+            Binding binding = BindingOperations.GetBinding(currentImage, Image.SourceProperty);
+            if (binding == null) return;
+            Deck currentDeck = MyGame.Collection[binding.ConverterParameter.ToString()];
+            var currentBorder = (Border) currentImage.Parent;
+            MakeStep(currentBorder, currentDeck);
         }
 
         private void menuItemNewGame_Click(object sender, RoutedEventArgs e)
         {
-            myGame.NewGame();
+            MyGame.NewGame();
         }
 
         private void menuItemExit_Click(object sender, RoutedEventArgs e)
@@ -281,43 +192,44 @@ namespace Well
 
         private void menuItemCancelStep_Click(object sender, RoutedEventArgs e)
         {
-            if (myGame.IsCancelEnabled)
+            if (MyGame.IsCancelEnabled)
             {
-                myGame.RestoreLastStep();
+                MyGame.RestoreLastStep();
             }
         }
 
         private void menuItemAbout_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new AboutDialog(this);
-            dlg.Title = FindResource("AboutProgram").ToString();
-            dlg.UpdateStatus = FindResource("UpdateStatus").ToString(); ;
-            dlg.Comments = FindResource("Comments").ToString(); ;
-            dlg.Image = new BitmapImage(new Uri(@"/about.png", UriKind.Relative));
+            var dlg = new AboutDialog(this)
+            {
+                Title = FindResource("AboutProgram").ToString(),
+                UpdateStatus = FindResource("UpdateStatus").ToString(),
+                Comments = FindResource("Comments").ToString(),
+                Image = new BitmapImage(new Uri(@"/about.png", UriKind.Relative))
+            };
             dlg.ShowDialog();
         }
 
         private void menuItemPreferences_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new PropertyDialog() { Owner = this };
-            var options = myGame.Options;
+            var dlg = new PropertyDialog {Owner = this};
+            OptionsViewModel options = MyGame.Options;
 
             dlg.DataContext = options;
             dlg.Title = FindResource("Preferences").ToString();
-            if (dlg.ShowDialog().Value)
-            {
-                options.Save();
-                myGame.Options = options;
-                myGame.NotifyTopCardsChanged();
-                SetLanguageDictionary();
-            }           
+            bool? showDialog = dlg.ShowDialog();
+            if (showDialog == null || !showDialog.Value) return;
+            options.Save();
+            MyGame.Options = options;
+            MyGame.NotifyTopCardsChanged();
+            SetLanguageDictionary();
         }
 
         private void menuItemResetDefault_Click(object sender, RoutedEventArgs e)
         {
-            myGame.Options.ResetDefault();
-            myGame.Options = myGame.Options;
-            myGame.Options.Language = myGame.Options.Language;
+            MyGame.Options.ResetDefault();
+            MyGame.Options = MyGame.Options;
+            MyGame.Options.Language = MyGame.Options.Language;
             SetLanguageDictionary();
         }
     }

@@ -2,12 +2,10 @@
 {
     public class MiddleChestDeck : Deck
     {
-        public MiddleChestDeck()
-        {
-        }
+        public const string Prefix = "M";
 
-        public MiddleChestDeck(string name)
-            : base(name)
+        public MiddleChestDeck(int name)
+            : base(Prefix + name)
         {
         }
     }

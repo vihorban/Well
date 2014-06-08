@@ -4,13 +4,14 @@ namespace Well.Objects
 {
     public class Deck
     {
+        public const string Any = "Any";
         public List<Card> Items;
         public string Name;
 
         public Deck()
         {
             Items = new List<Card>();
-            Name = "Unknown";
+            Name = Any;
         }
 
         public Deck(string name)
@@ -24,9 +25,17 @@ namespace Well.Objects
             return Items.Count == 0;
         }
 
-        public Card TopCard()
+        public Card TopCard
         {
-            return IsEmpty() ? Card.EmptyCard() : Items[Items.Count - 1];
+            get
+            {
+                return IsEmpty() ? Card.EmptyCard() : Items[Items.Count - 1];
+            }
+        }
+
+        public virtual Card DisplayCard()
+        {
+            return TopCard;
         }
 
         public virtual bool CanPutOnTop(Card newCard)
@@ -50,16 +59,16 @@ namespace Well.Objects
 
         public void MoveTo(Deck deck)
         {
-            if (TopCard().Value > 0)
+            if (TopCard.Value > 0)
             {
-                deck.Add(TopCard());
+                deck.Add(TopCard);
                 Remove();
             }
         }
 
         public virtual bool TryMove(Deck deck)
         {
-            if (deck.CanPutOnTop(TopCard()))
+            if (deck.CanPutOnTop(TopCard))
             {
                 MoveTo(deck);
                 return true;
@@ -67,9 +76,12 @@ namespace Well.Objects
             return false;
         }
 
-        public int Count()
+        public int Count
         {
-            return Items.Count;
+            get
+            {
+                return Items.Count;
+            }
         }
 
         public void Clear()
