@@ -62,6 +62,8 @@
             <MenuItem Header="{DynamicResource CancelStep}" IsEnabled="{Binding Path=IsCancelEnabled}"
                       Click="menuItemCancelStep_Click" InputGestureText="Ctrl+Z" />
             <MenuItem Header="{DynamicResource Preferences}" Click="menuItemPreferences_Click" InputGestureText="P" />
+            <MenuItem Header="{DynamicResource Save}" Click="menuItemSave_Click"/>
+            <MenuItem Header="{DynamicResource Load}" Click="menuItemLoad_Click"/>
             <MenuItem Header="{DynamicResource AboutProgram}" Click="menuItemAbout_Click" InputGestureText="F3" />
             <MenuItem Header="{DynamicResource Exit}" Click="menuItemExit_Click" InputGestureText="Esc" />
         </Menu>

@@ -89,6 +89,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Objects\SavedGame.cs" />
+    <Compile Include="XmlUtilities.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

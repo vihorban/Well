@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
 
 namespace Well.Objects
 {
@@ -19,9 +17,9 @@ namespace Well.Objects
         public bool IsGameOver;
         private bool _isSomethingSelected;
         private OptionsViewModel _options;
+        private int _score;
         private Deck _selected;
         private int _topCount;
-        private int _score;
 
         public Game()
         {
@@ -125,8 +123,6 @@ namespace Well.Objects
 
         public void Save(string fileName)
         {
-            var serializer = new XmlSerializer(typeof (SavedGame));
-            TextWriter writer = new StreamWriter(fileName);
             var game = new SavedGame
             {
                 AvailableSuits = _availableSuits,
@@ -135,15 +131,12 @@ namespace Well.Objects
                 TopCount = _topCount,
                 Steps = _steps
             };
-            serializer.Serialize(writer, game);
+            XmlUtilities<SavedGame>.Serialize(game, fileName);
         }
 
         public void Load(string fileName)
         {
-            var serializer = new XmlSerializer(typeof (SavedGame));
-            var reader = new StreamReader(fileName);
-            var game = (SavedGame) serializer.Deserialize(reader);
-            reader.Close();
+            SavedGame game = XmlUtilities<SavedGame>.Deserialize(fileName);
             Resore(game);
         }
 
@@ -243,7 +236,7 @@ namespace Well.Objects
 
         public void ModifyScore(Deck from, Deck to)
         {
-            var change = ScoreCounter.CountChange(from, to);
+            int change = ScoreCounter.CountChange(from, to);
             Score += change;
             LastStep.ScoreIncreased = change;
         }

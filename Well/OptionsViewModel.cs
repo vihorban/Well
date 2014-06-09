@@ -25,7 +25,7 @@ namespace Well
             get { return Settings.Default; }
         }
 
-        [LocalizableCategory("Design|Color")]
+        [LocalizableCategory("DesignColor")]
         [LocalizableDisplayName("BackgroundColor")]
         public Color BackgroundColor
         {
@@ -37,7 +37,7 @@ namespace Well
             }
         }
 
-        [LocalizableCategory("Design|Color")]
+        [LocalizableCategory("DesignColor")]
         [LocalizableDisplayName("SelectColor")]
         public Color SelectColor
         {
@@ -49,7 +49,7 @@ namespace Well
             }
         }
 
-        [LocalizableCategory("Design|Color")]
+        [LocalizableCategory("DesignColor")]
         [LocalizableDisplayName("CasualBorderColor")]
         public Color CasualBorderColor
         {
@@ -61,7 +61,7 @@ namespace Well
             }
         }
 
-        [LocalizableCategory("Design|Color")]
+        [LocalizableCategory("DesignColor")]
         [LocalizableDisplayName("DeckLightningColor")]
         public Color DeckLightningColor
         {
@@ -73,7 +73,7 @@ namespace Well
             }
         }
 
-        [LocalizableCategory("Design|Color")]
+        [LocalizableCategory("DesignColor")]
         [LocalizableDisplayName("WrongColor")]
         public Color WrongColor
         {
@@ -85,7 +85,7 @@ namespace Well
             }
         }
 
-        [LocalizableCategory("Design|Color")]
+        [LocalizableCategory("DesignColor")]
         [LocalizableDisplayName("SuccessColor")]
         public Color SuccessColor
         {
@@ -98,7 +98,7 @@ namespace Well
         }
 
         [Slidable(0, Game.MaxDifficulty)]
-        [LocalizableCategory("Difficulty|")]
+        [LocalizableCategory("DifficultyMenu")]
         [LocalizableDisplayName("Difficulty")]
         [LocalizableDescription("DifficultyDescrition")]
         public int Difficulty
@@ -115,7 +115,7 @@ namespace Well
             }
         }
 
-        [LocalizableCategory("Difficulty|")]
+        [LocalizableCategory("DifficultyMenu")]
         [LocalizableDisplayName("NumberOfCancellations")]
         public Cancellation NumberOfCancellations
         {
@@ -127,7 +127,7 @@ namespace Well
             }
         }
 
-        [LocalizableCategory("Language|")]
+        [LocalizableCategory("LanguageMenu")]
         [LocalizableDisplayName("Language")]
         [LocalizableDescription("LanguageChange")]
         public Languages Language
@@ -142,8 +142,8 @@ namespace Well
             }
         }
 
-        [LocalizableCategory("Design|Menu view")]
-        [LocalizableDisplayName("Compact menu")]
+        [LocalizableCategory("DesignMenu")]
+        [LocalizableDisplayName("Compact Menu")]
         public bool CompactMenu
         {
             get { return Settings.CompactMenu; }
@@ -210,7 +210,7 @@ namespace Well
             }
         }
 
-        [LocalizableCategory("Back suit|Back suit")]
+        [LocalizableCategory("Back Suit")]
         [LocalizableDisplayName("Choose")]
         [ItemsSourceProperty("BackSuitItemsDescription")]
         public string BackSuit
@@ -231,7 +231,7 @@ namespace Well
         }
 
         [Height(double.NaN, 0, 140)]
-        [LocalizableCategory("Back suit|Back suit")]
+        [LocalizableCategory("Back Suit")]
         [LocalizableDisplayName("Preview")]
         public ImageSource BackSuitImagePreview
         {
@@ -255,7 +255,7 @@ namespace Well
             }
         }
 
-        [LocalizableCategory("Empty deck|Empty deck")]
+        [LocalizableCategory("EmptyDeckMenu")]
         [LocalizableDisplayName("Choose")]
         [ItemsSourceProperty("ZeroCardItemsDescription")]
         public string ZeroCard
@@ -276,7 +276,7 @@ namespace Well
         }
 
         [Height(double.NaN, 0, 140)]
-        [LocalizableCategory("Empty deck|Empty deck")]
+        [LocalizableCategory("EmptyDeckMenu")]
         [LocalizableDisplayName("Preview")]
         public ImageSource ZeroCardImagePreview
         {
@@ -300,7 +300,7 @@ namespace Well
             }
         }
 
-        [LocalizableCategory("Empty card|Empty card")]
+        [LocalizableCategory("EmptyCardMenu")]
         [LocalizableDisplayName("Choose")]
         [ItemsSourceProperty("EmptyCardItemsDescription")]
         public string EmptyCard
@@ -321,7 +321,7 @@ namespace Well
         }
 
         [Height(double.NaN, 0, 140)]
-        [LocalizableCategory("Empty card|Empty card")]
+        [LocalizableCategory("EmptyCardMenu")]
         [LocalizableDisplayName("Preview")]
         public ImageSource EmptyCardImagePreview
         {

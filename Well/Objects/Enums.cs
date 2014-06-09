@@ -139,7 +139,7 @@ namespace Well.Objects
                 }
                 case 8:
                 {
-                    return Application.Current.TryFindResource("Night city").ToString();
+                    return Application.Current.TryFindResource("Night City").ToString();
                 }
                 case 9:
                 {
@@ -151,35 +151,35 @@ namespace Well.Objects
                 }
                 case 11:
                 {
-                    return Application.Current.TryFindResource("Wing @Mass Effect").ToString();
+                    return Application.Current.TryFindResource("Wing Mass Effect").ToString();
                 }
                 case 12:
                 {
-                    return Application.Current.TryFindResource("Star @Mass Effect").ToString();
+                    return Application.Current.TryFindResource("Star Mass Effect").ToString();
                 }
                 case 13:
                 {
-                    return Application.Current.TryFindResource("N7 @Mass Effect").ToString();
+                    return Application.Current.TryFindResource("N7 Mass Effect").ToString();
                 }
                 case 14:
                 {
-                    return Application.Current.TryFindResource("Symbol @Mass Effect").ToString();
+                    return Application.Current.TryFindResource("Symbol Mass Effect").ToString();
                 }
                 case 15:
                 {
-                    return Application.Current.TryFindResource("Classic @Emotions").ToString();
+                    return Application.Current.TryFindResource("Classic Emotions").ToString();
                 }
                 case 16:
                 {
-                    return Application.Current.TryFindResource("Classic @Microsoft").ToString();
+                    return Application.Current.TryFindResource("Classic Microsoft").ToString();
                 }
                 case 17:
                 {
-                    return Application.Current.TryFindResource("Hearts @Microsoft").ToString();
+                    return Application.Current.TryFindResource("Hearts Microsoft").ToString();
                 }
                 case 18:
                 {
-                    return Application.Current.TryFindResource("Seasons @Microsoft").ToString();
+                    return Application.Current.TryFindResource("Seasons Microsoft").ToString();
                 }
                 default:
                 {
@@ -257,27 +257,27 @@ namespace Well.Objects
             {
                 case 0:
                 {
-                    return Application.Current.TryFindResource("Green with circle").ToString();
+                    return Application.Current.TryFindResource("Green With Circle").ToString();
                 }
                 case 1:
                 {
-                    return Application.Current.TryFindResource("Green usual").ToString();
+                    return Application.Current.TryFindResource("Green Usual").ToString();
                 }
                 case 2:
                 {
-                    return Application.Current.TryFindResource("Yellow with circle").ToString();
+                    return Application.Current.TryFindResource("Yellow With Circle").ToString();
                 }
                 case 3:
                 {
-                    return Application.Current.TryFindResource("Yellow usual").ToString();
+                    return Application.Current.TryFindResource("Yellow Usual").ToString();
                 }
                 case 4:
                 {
-                    return Application.Current.TryFindResource("Create me").ToString();
+                    return Application.Current.TryFindResource("Create Me").ToString();
                 }
                 case 5:
                 {
-                    return Application.Current.TryFindResource("Gift card").ToString();
+                    return Application.Current.TryFindResource("Gift Card").ToString();
                 }
                 case 6:
                 {
