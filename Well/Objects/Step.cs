@@ -11,10 +11,14 @@ namespace Well.Objects
     public class Step
     {
         public List<Movement> Movements;
+        public SuitEnum? DisabledSuit;
+        public bool TopCountDecrased;
 
         public Step()
         {
             Movements = new List<Movement>();
+            DisabledSuit = null;
+            TopCountDecrased = false;
         }
 
         public void Add(string from, string to)

@@ -5,7 +5,7 @@
         public const string Prefix = "M";
 
         public MiddleChestDeck(int name)
-            : base(Prefix + name)
+            : base(Prefix + name, DeckType.Middle)
         {
         }
     }

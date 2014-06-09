@@ -66,17 +66,29 @@ namespace Well
             var border = (Border) ((Image) sender).Parent;
             if (MyGame.IsSomethingSelected)
             {
-                MakeWrongSelection(border);
-                MakeUsualBorder(SelectedBorder);
-                MyGame.IsSomethingSelected = false;
+                MakeAction(border, false);
             }
             else
             {
                 MakeBackDeckLighted(border);
                 MyGame.ReleaseBackDeck();
-                MyGame.NotifyTopCardsChanged();
                 CheckGameOver();
             }
+        }
+
+
+        public void MakeAction(Border border, bool isSuccess)
+        {
+            if (isSuccess)
+            {
+                MakeSuccessSelection(border);
+            }
+            else
+            {
+                MakeWrongSelection(border);
+            }
+            MakeUsualBorder(SelectedBorder);
+            MyGame.IsSomethingSelected = false;
         }
 
         public void MakeWrongSelection(Border border)
@@ -115,7 +127,7 @@ namespace Well
             t.Start();
         }
 
-        public void MakeSuccess(Border border)
+        public void MakeSuccessSelection(Border border)
         {
             border.BorderBrush = new SolidColorBrush(MyGame.Options.SuccessColor);
             var t = new Thread(() =>
@@ -141,29 +153,12 @@ namespace Well
         {
             if (MyGame.IsSomethingSelected)
             {
-                if (MyGame.Selected.TryMove(deck))
-                {
-                    if (deck.Name[0] == 'R' && deck.Count == 1)
-                        MyGame.ChangeAvailability(deck.Name);
-                    MyGame.CheckNumberOfSavedSteps();
-                    MyGame.AddNewStep();
-                    MyGame.SaveMovement(MyGame.Selected.Name, deck.Name);
-                    MyGame.NotifyTopCardsChanged();
-                    MyGame.NotifyCountsChanged();
-                    MakeUsualBorder(SelectedBorder);
-                    MakeSuccess(border);
-                }
-                else
-                {
-                    MakeUsualBorder(SelectedBorder);
-                    MakeWrongSelection(border);
-                }
-                MyGame.IsSomethingSelected = false;
+                MakeAction(border, MyGame.TryMove(deck));
             }
             else
             {
                 MyGame.IsSomethingSelected = true;
-                MyGame.Selected = deck;
+                MyGame.Select(deck);
                 SelectedBorder = border;
                 MakeSelected(SelectedBorder);
             }
@@ -221,7 +216,7 @@ namespace Well
             if (showDialog == null || !showDialog.Value) return;
             options.Save();
             MyGame.Options = options;
-            MyGame.NotifyTopCardsChanged();
+            MyGame.NotifyCardsChanged();
             SetLanguageDictionary();
         }
 

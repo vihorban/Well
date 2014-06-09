@@ -7,30 +7,28 @@ namespace Well.Objects
         public const string Any = "Any";
         public List<Card> Items;
         public string Name;
+        public DeckType Type;
 
-        public Deck()
-        {
-            Items = new List<Card>();
-            Name = Any;
-        }
-
-        public Deck(string name)
+        public Deck(string name = Any, DeckType deckType = DeckType.None)
         {
             Items = new List<Card>();
             Name = name;
+            Type = deckType;
+        }
+
+        public Card TopCard
+        {
+            get { return IsEmpty() ? Card.EmptyCard() : Items[Items.Count - 1]; }
+        }
+
+        public int Count
+        {
+            get { return Items.Count; }
         }
 
         public bool IsEmpty()
         {
             return Items.Count == 0;
-        }
-
-        public Card TopCard
-        {
-            get
-            {
-                return IsEmpty() ? Card.EmptyCard() : Items[Items.Count - 1];
-            }
         }
 
         public virtual Card DisplayCard()
@@ -74,14 +72,6 @@ namespace Well.Objects
                 return true;
             }
             return false;
-        }
-
-        public int Count
-        {
-            get
-            {
-                return Items.Count;
-            }
         }
 
         public void Clear()

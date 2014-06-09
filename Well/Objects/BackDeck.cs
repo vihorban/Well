@@ -5,7 +5,7 @@
         public const string BaseName = "Back";
 
         public BackDeck()
-            : base(BaseName)
+            : base(BaseName, DeckType.Back)
         {
         }
 

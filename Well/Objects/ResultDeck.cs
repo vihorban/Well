@@ -5,13 +5,14 @@ namespace Well.Objects
     public class ResultDeck : Deck
     {
         public List<SuitEnum> AvailableSuits;
+        public SuitEnum? DisabledSuit;
         public const string Prefix = "R";
 
-        public ResultDeck(int name)
-            : base(Prefix+name)
+        public ResultDeck(int name, List<SuitEnum> availableSuits)
+            : base(Prefix+name, DeckType.Result)
         {
-            SuitEnum[] suits = {SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds};
-            AvailableSuits = new List<SuitEnum>(suits);
+            AvailableSuits = availableSuits;
+            DisabledSuit = null;
         }
 
         public override bool CanPutOnTop(Card newCard)
@@ -20,13 +21,10 @@ namespace Well.Objects
                 return true;
             if (newCard.Value == CardValue.King && TopCard.Value == CardValue.Ace && newCard.Suit == TopCard.Suit)
                 return true;
-            var result = SuitEnum.Any;
-            foreach (SuitEnum s in AvailableSuits)
-                if (s == newCard.Suit)
-                    result = s;
-            if (newCard.Value == CardValue.King && TopCard.Value == CardValue.Empty && result != SuitEnum.Any)
+            if (newCard.Value == CardValue.King && TopCard.Value == CardValue.Empty && AvailableSuits.Contains(newCard.Suit))
             {
-                AvailableSuits.Remove(result);
+                DisabledSuit = newCard.Suit;
+                AvailableSuits.Remove(newCard.Suit);
                 return true;
             }
             return false;

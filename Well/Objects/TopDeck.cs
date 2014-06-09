@@ -5,7 +5,7 @@
         public const string Prefix = "T";
 
         public TopDeck(int name)
-            : base(Prefix + name)
+            : base(Prefix + name, DeckType.Top)
         {
         }
     }

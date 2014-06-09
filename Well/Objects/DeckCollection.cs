@@ -37,7 +37,7 @@ namespace Well.Objects
         public TopDeck[] TopDecks;
         public WarehouseDeck WarehouseDeck;
 
-        public DeckCollection()
+        public DeckCollection(List<SuitEnum> availableSuits)
         {
             Decks = new Dictionary<string, Deck>();
             BackDeck = new BackDeck();
@@ -59,7 +59,7 @@ namespace Well.Objects
             ResultDecks = new ResultDeck[ResultCount];
             for (int i = 0; i < ResultCount; i++)
             {
-                ResultDecks[i] = new ResultDeck(i);
+                ResultDecks[i] = new ResultDeck(i, availableSuits);
                 Decks.Add(ResultDecks[i].Name, ResultDecks[i]);
             }
             TopDecks = new TopDeck[TopCount];

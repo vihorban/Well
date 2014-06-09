@@ -5,7 +5,7 @@
         public const string Prefix = "W";
 
         public WarehouseDeck(int name = 0)
-            : base(Prefix + name)
+            : base(Prefix + name, DeckType.Warehouse)
         {
         }
 

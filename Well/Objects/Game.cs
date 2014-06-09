@@ -9,36 +9,41 @@ namespace Well.Objects
         public const int NumOfGeneratedDecks = 2;
         public const int BorderCount = 10;
         public const int MaxDifficulty = 60;
+        private readonly List<SuitEnum> _availableSuits;
         private readonly DeckCollection _collection;
+        private readonly List<Card> _generalDeck;
+        private readonly List<Step> _steps;
         private readonly SuitEnum[] _suits = {SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds};
-        public List<Card> GeneralDeck;
-
         public bool IsGameOver;
         public bool IsSomethingSelected;
-
-        public Deck Selected;
-
-        public List<Step> Steps;
-        public int TopCount;
-
         private OptionsViewModel _options;
+        private Deck _selected;
+        private int _topCount;
 
         public Game()
         {
             _options = new OptionsViewModel();
             _options.Language = _options.Language;
-            GeneralDeck = new List<Card>();
-            _collection = new DeckCollection();
-            Selected = new Deck();
-            IsGameOver = false;
-            IsSomethingSelected = false;
-            Steps = new List<Step>();
-            TopCount = DeckCollection.TopCount;
+            _availableSuits = new List<SuitEnum>(_suits);
+            _collection = new DeckCollection(_availableSuits);
+            _generalDeck = new List<Card>();
+            _selected = new Deck();
+            _steps = new List<Step>();
         }
 
-        public Step LastStep()
+        public Step LastStep
         {
-            return Steps[Steps.Count - 1];
+            get { return _steps[_steps.Count - 1]; }
+        }
+
+        public void InitializeGame()
+        {
+            Clear();
+            IsGameOver = false;
+            IsSomethingSelected = false;
+            _topCount = DeckCollection.TopCount;
+            _availableSuits.AddRange(_suits);
+            GenerateGeneralDeck();
         }
 
         public void GenerateGeneralDeck()
@@ -49,7 +54,7 @@ namespace Well.Objects
                 {
                     foreach (SuitEnum s in _suits)
                     {
-                        GeneralDeck.Add(new Card {Value = i, Suit = s, DeckName = Deck.Any});
+                        _generalDeck.Add(new Card {Value = i, Suit = s, DeckName = Deck.Any});
                     }
                 }
             }
@@ -57,69 +62,69 @@ namespace Well.Objects
 
         public void Clear()
         {
-            GeneralDeck.Clear();
-            Selected.Clear();
             foreach (Deck deck in Collection)
             {
                 deck.Clear();
             }
+            _generalDeck.Clear();
+            _selected.Clear();
+            _steps.Clear();
+            _availableSuits.Clear();
+        }
+
+        public void Select(Deck deck)
+        {
+            _selected = deck;
+        }
+
+        private void MoveFromGeneral(Deck to, Random random, bool useDifficulty = true)
+        {
+            int left = _generalDeck.Count;
+            if (useDifficulty)
+            {
+                left += _options.Difficulty - MaxDifficulty;
+            }
+            int index = random.Next(0, left);
+            Card addCard = _generalDeck[index];
+            to.Add(addCard);
+            _generalDeck.RemoveAt(index);
         }
 
         public void NewGame()
         {
-            Clear();
-            GenerateGeneralDeck();
+            InitializeGame();
             var random = new Random();
             for (int i = 0; i < DeckCollection.MiddleCount; ++i)
             {
                 for (int j = 0; j < BorderCount; j++)
                 {
-                    int left = GeneralDeck.Count + _options.Difficulty - MaxDifficulty;
-                    int index = random.Next(0, left);
-                    Card addCard = GeneralDeck[index];
-                    Collection.MiddleChestDecks[i].Add(addCard);
-                    GeneralDeck.RemoveAt(index);
+                    MoveFromGeneral(Collection.MiddleChestDecks[i], random);
                 }
             }
             for (int i = 0; i < DeckCollection.BorderCount; ++i)
             {
-                int left = GeneralDeck.Count + _options.Difficulty - MaxDifficulty;
-                int index = random.Next(0, left);
-                Collection.BorderChestDecks[i].Add(GeneralDeck[index]);
-                GeneralDeck.RemoveAt(index);
+                MoveFromGeneral(Collection.BorderChestDecks[i], random);
             }
-            while (GeneralDeck.Count > 0)
+            while (_generalDeck.Count > 0)
             {
-                int left = GeneralDeck.Count;
-                int index = random.Next(0, left);
-                Collection.BackDeck.Add(GeneralDeck[index]);
-                GeneralDeck.RemoveAt(index);
+                MoveFromGeneral(Collection.BackDeck, random, false);
             }
-            IsGameOver = false;
-            IsSomethingSelected = false;
-            TopCount = DeckCollection.TopCount;
-            var availableSuits = new List<SuitEnum>(_suits);
-            foreach (ResultDeck s in Collection.ResultDecks)
-            {
-                s.AvailableSuits = availableSuits;
-            }
-            Steps.Clear();
-            NotifyCountsChanged();
-            NotifyTopCardsChanged();
+            NotifyCardsChanged();
         }
 
         public void ReleaseBackDeck()
         {
-            CheckNumberOfSavedSteps();
+            DeleteOldSteps();
             AddNewStep();
             if (Collection.BackDeck.IsEmpty())
             {
                 CollectBackDeck();
-                TopCount--;
-                if (TopCount == 0)
+                _topCount--;
+                LastStep.TopCountDecrased = true;
+                if (_topCount == 0)
                     IsGameOver = true;
             }
-            for (int i = 0; i < TopCount; i++)
+            for (int i = 0; i < _topCount; i++)
             {
                 if (!Collection.BackDeck.IsEmpty())
                 {
@@ -127,6 +132,29 @@ namespace Well.Objects
                     SaveMovement(Collection.BackDeck.Name, Collection.TopDecks[i].Name);
                 }
             }
+            NotifyCardsChanged();
+        }
+
+        public bool TryMove(Deck to)
+        {
+            if (_selected.TryMove(to))
+            {
+                DeleteOldSteps();
+                AddNewStep();
+                SaveMovement(_selected.Name, to.Name);
+                if (to.Type == DeckType.Result)
+                {
+                    var deck = (ResultDeck) to;
+                    if (deck.DisabledSuit != null)
+                    {
+                        LastStep.DisabledSuit = deck.DisabledSuit;
+                        deck.DisabledSuit = null;
+                    }
+                }
+                NotifyCardsChanged();
+                return true;
+            }
+            return false;
         }
 
         public void CollectBackDeck()
@@ -149,40 +177,25 @@ namespace Well.Objects
             return Collection.TopDecks.All(s => s.IsEmpty());
         }
 
-        public void ChangeAvailability(string nameDeck)
+        public void DeleteOldSteps()
         {
-            ResultDeck result = null;
-            foreach (ResultDeck k in Collection.ResultDecks)
-            {
-                if (k.Name == nameDeck)
-                    result = k;
-            }
-            if (result == null) return;
-            foreach (ResultDeck k in Collection.ResultDecks)
-            {
-                k.AvailableSuits = result.AvailableSuits;
-            }
-        }
-
-        public void CheckNumberOfSavedSteps()
-        {
-            if (Steps.Count > (int) _options.NumberOfCancellations - 1)
+            if (_steps.Count > (int) _options.NumberOfCancellations - 1)
                 DeleteLastStep();
         }
 
         public void DeleteLastStep()
         {
-            Steps.RemoveAt(Steps.Count - 1);
+            _steps.Remove(LastStep);
         }
 
         public void AddNewStep()
         {
-            Steps.Add(new Step());
+            _steps.Add(new Step());
         }
 
         public void SaveMovement(string from, string to)
         {
-            Steps[Steps.Count - 1].Add(from, to);
+            LastStep.Add(from, to);
         }
 
         public bool IsGameWon()
@@ -198,40 +211,28 @@ namespace Well.Objects
 
         public void RestoreLastStep()
         {
-            if (Steps.Count > 0)
+            if (_steps.Count > 0)
             {
-                Step lStep = LastStep();
-                bool topCountChangeChecked = false;
-                for (int i = lStep.Movements.Count - 1; i >= 0; i--)
+                if (LastStep.DisabledSuit != null)
                 {
-                    string from = lStep.Movements[i].From;
-                    string to = lStep.Movements[i].To;
+                    _availableSuits.Add(LastStep.DisabledSuit.Value);
+                }
+                if (LastStep.TopCountDecrased)
+                {
+                    _topCount++;
+                }
+                for (int i = LastStep.Movements.Count - 1; i >= 0; i--)
+                {
+                    string from = LastStep.Movements[i].From;
+                    string to = LastStep.Movements[i].To;
                     Deck deckFrom = FindByName(from);
                     Deck deckTo = FindByName(to);
-                    if (to[0] == ResultDeck.Prefix[0] && deckTo.Count == 1)
-                    {
-                        SuitEnum restoredSuit = deckTo.TopCard.Suit;
-                        foreach (ResultDeck s in Collection.ResultDecks)
-                        {
-                            s.AvailableSuits.Add(restoredSuit);
-                        }
-                    }
-                    if (!topCountChangeChecked && to == BackDeck.BaseName)
-                    {
-                        TopCount++;
-                        topCountChangeChecked = true;
-                    }
                     deckTo.MoveTo(deckFrom);
                 }
                 DeleteLastStep();
-                NotifyCountsChanged();
-                NotifyTopCardsChanged();
+                NotifyCardsChanged();
             }
         }
-
-        #region Private Members
-
-        #endregion
 
         #region Binding Variables
 
@@ -252,19 +253,14 @@ namespace Well.Objects
 
         public bool IsCancelEnabled
         {
-            get { return Steps.Count > 0 && !IsGameOver; }
+            get { return _steps.Count > 0 && !IsGameOver; }
         }
 
         #endregion
 
         #region Notify Helpers
 
-        public void NotifyCountsChanged()
-        {
-            NotifyPropertyChanged("Collection");
-        }
-
-        public void NotifyTopCardsChanged()
+        public void NotifyCardsChanged()
         {
             NotifyPropertyChanged("Collection");
             NotifyPropertyChanged("IsCancelEnabled");

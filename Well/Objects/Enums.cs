@@ -22,6 +22,17 @@ namespace Well.Objects
         Any
     }
 
+    public enum DeckType
+    {
+        None,
+        Result,
+        Top,
+        Middle,
+        Border,
+        Warehouse,
+        Back
+    }
+
     public class CardStyleListItem
     {
         public int Value;
