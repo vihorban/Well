@@ -85,6 +85,7 @@
     <Compile Include="Converters\ImageSourceConverter.cs" />
     <Compile Include="LanguageCode.cs" />
     <Compile Include="Objects\DeckCollection.cs" />
+    <Compile Include="Objects\ScoreCounter.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Objects\SavedGame.cs" />

@@ -92,4 +92,5 @@
     <system:String x:Key="Seasons @Microsoft">Пори року @Майкрософт</system:String>
     <system:String x:Key="Save">Зберегти гру</system:String>
     <system:String x:Key="Load">Заватнажити гру</system:String>
+    <system:String x:Key="Score">Рахунок:</system:String>
 </ResourceDictionary>

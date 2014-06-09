@@ -138,6 +138,12 @@
                     </Grid>
                 </GroupBox>
             </Grid>
+            <Grid Width="235" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,235,10,0">
+                <StackPanel Orientation="Horizontal">
+                    <Label HorizontalAlignment="Left" FontSize="14" Content="{DynamicResource Score}" />
+                    <Label HorizontalAlignment="Right" FontSize="14" Content="{Binding Path=Score}" />
+                </StackPanel>
+            </Grid>
             <Grid Width="100" Height="125" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,125,0,0">
                 <StackPanel>
                     <Border BorderThickness="3"

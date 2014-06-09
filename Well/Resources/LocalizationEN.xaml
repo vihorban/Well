@@ -92,4 +92,5 @@
     <system:String x:Key="Seasons @Microsoft">Seasons @Microsoft</system:String>
     <system:String x:Key="Save">Save game</system:String>
     <system:String x:Key="Load">Load game</system:String>
+    <system:String x:Key="Score">Score:</system:String>
 </ResourceDictionary>

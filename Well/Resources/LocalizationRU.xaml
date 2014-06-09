@@ -92,4 +92,5 @@
     <system:String x:Key="Seasons @Microsoft">Сезоны @Майкрософт</system:String>
     <system:String x:Key="Save">Сохранить игру</system:String>
     <system:String x:Key="Load">Загрузить игру</system:String>
+    <system:String x:Key="Score">Счет:</system:String>
 </ResourceDictionary>

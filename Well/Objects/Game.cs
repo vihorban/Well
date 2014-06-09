@@ -21,6 +21,7 @@ namespace Well.Objects
         private OptionsViewModel _options;
         private Deck _selected;
         private int _topCount;
+        private int _score;
 
         public Game()
         {
@@ -65,6 +66,16 @@ namespace Well.Objects
             }
         }
 
+        public int Score
+        {
+            get { return _score; }
+            set
+            {
+                _score = value;
+                NotifyPropertyChanged("Score");
+            }
+        }
+
         private Step LastStep
         {
             get { return _steps[_steps.Count - 1]; }
@@ -78,6 +89,7 @@ namespace Well.Objects
             _topCount = DeckCollection.TopCount;
             _availableSuits.AddRange(_suits);
             GenerateGeneralDeck();
+            Score = 0;
         }
 
         private void GenerateGeneralDeck()
@@ -191,6 +203,7 @@ namespace Well.Objects
                 CollectBackDeck();
                 _topCount--;
                 LastStep.TopCountDecrased = true;
+                Score += ScoreCounter.BackDeckOpened;
                 if (_topCount == 0)
                     IsGameOver = true;
             }
@@ -211,6 +224,7 @@ namespace Well.Objects
             {
                 DeleteOldSteps();
                 AddNewStep();
+                ModifyScore(_selected, to);
                 SaveMovement(_selected.Name, to.Name);
                 if (to.Type == DeckType.Result)
                 {
@@ -225,6 +239,13 @@ namespace Well.Objects
                 return true;
             }
             return false;
+        }
+
+        public void ModifyScore(Deck from, Deck to)
+        {
+            var change = ScoreCounter.CountChange(from, to);
+            Score += change;
+            LastStep.ScoreIncreased = change;
         }
 
         private void CollectBackDeck()
@@ -291,6 +312,7 @@ namespace Well.Objects
                 {
                     _topCount++;
                 }
+                Score -= LastStep.ScoreIncreased;
                 for (int i = LastStep.Movements.Count - 1; i >= 0; i--)
                 {
                     string from = LastStep.Movements[i].From;

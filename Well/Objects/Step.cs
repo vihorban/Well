@@ -13,12 +13,14 @@ namespace Well.Objects
         public List<Movement> Movements;
         public SuitEnum? DisabledSuit;
         public bool TopCountDecrased;
+        public int ScoreIncreased;
 
         public Step()
         {
             Movements = new List<Movement>();
             DisabledSuit = null;
             TopCountDecrased = false;
+            ScoreIncreased = 0;
         }
 
         public void Add(string from, string to)
