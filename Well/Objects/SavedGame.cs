@@ -9,5 +9,6 @@ namespace Well.Objects
         public bool IsGameOver;
         public List<Step> Steps;
         public int TopCount;
+        public int Score;
     }
 }

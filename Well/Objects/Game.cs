@@ -129,7 +129,8 @@ namespace Well.Objects
                 Collection = Collection,
                 IsGameOver = IsGameOver,
                 TopCount = _topCount,
-                Steps = _steps
+                Steps = _steps,
+                Score = Score
             };
             XmlUtilities<SavedGame>.Serialize(game, fileName);
         }
@@ -145,6 +146,7 @@ namespace Well.Objects
             Clear();
             IsGameOver = game.IsGameOver;
             IsSomethingSelected = false;
+            Score = game.Score;
             _topCount = game.TopCount;
             _availableSuits.AddRange(game.AvailableSuits);
             _collection.Copy(game.Collection, _availableSuits);
