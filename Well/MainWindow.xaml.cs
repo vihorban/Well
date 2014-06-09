@@ -6,6 +6,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 using PropertyTools.Wpf;
 using Well.Objects;
 using Well.Properties;
@@ -146,6 +147,7 @@ namespace Well
 
         public void MakeSelected(Border border)
         {
+            SelectedBorder = border;
             border.BorderBrush = new SolidColorBrush(MyGame.Options.SelectColor);
         }
 
@@ -157,10 +159,8 @@ namespace Well
             }
             else
             {
-                MyGame.IsSomethingSelected = true;
                 MyGame.Select(deck);
-                SelectedBorder = border;
-                MakeSelected(SelectedBorder);
+                MakeSelected(border);
             }
             CheckWin();
         }
@@ -226,6 +226,57 @@ namespace Well
             MyGame.Options = MyGame.Options;
             MyGame.Options.Language = MyGame.Options.Language;
             SetLanguageDictionary();
+        }
+
+        private void menuItemSave_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var dlg = new SaveFileDialog
+                {
+                    FileName = "Game",
+                    DefaultExt = ".xml",
+                    FilterIndex = 1,
+                    Filter = "XML documents (.xml)|*.xml|All files (*.*)|*.*"
+                };
+
+                bool? result = dlg.ShowDialog();
+
+                if (result == true)
+                {
+                    MyGame.Save(dlg.FileName);
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
+        }
+
+        private void menuItemLoad_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var dlg = new OpenFileDialog
+                {
+                    FileName = "Game",
+                    DefaultExt = ".xml",
+                    FilterIndex = 1,
+                    Filter = "XML documents (.xml)|*.xml|All files (*.*)|*.*"
+                };
+
+                bool? result = dlg.ShowDialog();
+
+                if (result == true)
+                {
+                    MakeUsualBorder(SelectedBorder);
+                    MyGame.Load(dlg.FileName);
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
         }
     }
 }

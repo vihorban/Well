@@ -90,4 +90,6 @@
     <system:String x:Key="Classic @Microsoft">Класичний @Майкрософт</system:String>
     <system:String x:Key="Hearts @Microsoft">Серце @Майкрософт</system:String>
     <system:String x:Key="Seasons @Microsoft">Пори року @Майкрософт</system:String>
+    <system:String x:Key="Save">Зберегти гру</system:String>
+    <system:String x:Key="Load">Заватнажити гру</system:String>
 </ResourceDictionary>

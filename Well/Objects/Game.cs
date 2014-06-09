@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace Well.Objects
 {
@@ -15,7 +17,7 @@ namespace Well.Objects
         private readonly List<Step> _steps;
         private readonly SuitEnum[] _suits = {SuitEnum.Clubs, SuitEnum.Hearts, SuitEnum.Spades, SuitEnum.Diamonds};
         public bool IsGameOver;
-        public bool IsSomethingSelected;
+        private bool _isSomethingSelected;
         private OptionsViewModel _options;
         private Deck _selected;
         private int _topCount;
@@ -27,16 +29,48 @@ namespace Well.Objects
             _availableSuits = new List<SuitEnum>(_suits);
             _collection = new DeckCollection(_availableSuits);
             _generalDeck = new List<Card>();
-            _selected = new Deck();
             _steps = new List<Step>();
         }
 
-        public Step LastStep
+        public OptionsViewModel Options
+        {
+            get { return _options; }
+            set
+            {
+                _options = value;
+                NotifyPropertyChanged("Options");
+            }
+        }
+
+        public DeckCollection Collection
+        {
+            get { return _collection; }
+        }
+
+        public bool IsCancelEnabled
+        {
+            get { return _steps.Count > 0 && !IsGameOver; }
+        }
+
+        public bool IsSomethingSelected
+        {
+            get { return _isSomethingSelected; }
+            set
+            {
+                _isSomethingSelected = value;
+                if (_isSomethingSelected == false)
+                {
+                    _selected = null;
+                }
+            }
+        }
+
+        private Step LastStep
         {
             get { return _steps[_steps.Count - 1]; }
         }
 
-        public void InitializeGame()
+        private void InitializeGame()
         {
             Clear();
             IsGameOver = false;
@@ -46,7 +80,7 @@ namespace Well.Objects
             GenerateGeneralDeck();
         }
 
-        public void GenerateGeneralDeck()
+        private void GenerateGeneralDeck()
         {
             for (int k = 0; k < NumOfGeneratedDecks; k++)
             {
@@ -60,21 +94,57 @@ namespace Well.Objects
             }
         }
 
-        public void Clear()
+        private void Clear()
         {
             foreach (Deck deck in Collection)
             {
                 deck.Clear();
             }
             _generalDeck.Clear();
-            _selected.Clear();
             _steps.Clear();
             _availableSuits.Clear();
         }
 
         public void Select(Deck deck)
         {
+            _isSomethingSelected = true;
             _selected = deck;
+        }
+
+        public void Save(string fileName)
+        {
+            var serializer = new XmlSerializer(typeof (SavedGame));
+            TextWriter writer = new StreamWriter(fileName);
+            var game = new SavedGame
+            {
+                AvailableSuits = _availableSuits,
+                Collection = Collection,
+                IsGameOver = IsGameOver,
+                TopCount = _topCount,
+                Steps = _steps
+            };
+            serializer.Serialize(writer, game);
+        }
+
+        public void Load(string fileName)
+        {
+            var serializer = new XmlSerializer(typeof (SavedGame));
+            var reader = new StreamReader(fileName);
+            var game = (SavedGame) serializer.Deserialize(reader);
+            reader.Close();
+            Resore(game);
+        }
+
+        public void Resore(SavedGame game)
+        {
+            Clear();
+            IsGameOver = game.IsGameOver;
+            IsSomethingSelected = false;
+            _topCount = game.TopCount;
+            _availableSuits.AddRange(game.AvailableSuits);
+            _collection.Copy(game.Collection, _availableSuits);
+            _steps.AddRange(game.Steps);
+            NotifyCardsChanged();
         }
 
         private void MoveFromGeneral(Deck to, Random random, bool useDifficulty = true)
@@ -157,7 +227,7 @@ namespace Well.Objects
             return false;
         }
 
-        public void CollectBackDeck()
+        private void CollectBackDeck()
         {
             while (!IsTopDecksEmpty())
             {
@@ -172,28 +242,28 @@ namespace Well.Objects
             }
         }
 
-        public bool IsTopDecksEmpty()
+        private bool IsTopDecksEmpty()
         {
             return Collection.TopDecks.All(s => s.IsEmpty());
         }
 
-        public void DeleteOldSteps()
+        private void DeleteOldSteps()
         {
             if (_steps.Count > (int) _options.NumberOfCancellations - 1)
                 DeleteLastStep();
         }
 
-        public void DeleteLastStep()
+        private void DeleteLastStep()
         {
             _steps.Remove(LastStep);
         }
 
-        public void AddNewStep()
+        private void AddNewStep()
         {
             _steps.Add(new Step());
         }
 
-        public void SaveMovement(string from, string to)
+        private void SaveMovement(string from, string to)
         {
             LastStep.Add(from, to);
         }
@@ -204,7 +274,7 @@ namespace Well.Objects
             return Collection.ResultDecks.All(deck => deck.Count == neededValue);
         }
 
-        public Deck FindByName(string deckName)
+        private Deck FindByName(string deckName)
         {
             return Collection[deckName];
         }
@@ -233,30 +303,6 @@ namespace Well.Objects
                 NotifyCardsChanged();
             }
         }
-
-        #region Binding Variables
-
-        public OptionsViewModel Options
-        {
-            get { return _options; }
-            set
-            {
-                _options = value;
-                NotifyPropertyChanged("Options");
-            }
-        }
-
-        public DeckCollection Collection
-        {
-            get { return _collection; }
-        }
-
-        public bool IsCancelEnabled
-        {
-            get { return _steps.Count > 0 && !IsGameOver; }
-        }
-
-        #endregion
 
         #region Notify Helpers
 

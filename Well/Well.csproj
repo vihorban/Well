@@ -87,6 +87,7 @@
     <Compile Include="Objects\DeckCollection.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="Objects\SavedGame.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

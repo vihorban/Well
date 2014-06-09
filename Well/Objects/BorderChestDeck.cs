@@ -4,6 +4,10 @@
     {
         public const string Prefix = "B";
 
+        public BorderChestDeck():this(0)
+        {
+        }
+
         public BorderChestDeck(int name)
             : base(Prefix + name, DeckType.Border)
         {

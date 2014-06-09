@@ -8,7 +8,7 @@ namespace Well.Objects
 
         public DeckEnumerator(DeckCollection coll)
         {
-            _enumerator = coll.Decks.GetEnumerator();
+            _enumerator = coll.GetDictonaryEnumerator();
         }
 
         public Deck Current
@@ -29,7 +29,7 @@ namespace Well.Objects
         public const int ResultCount = 4;
         public const int TopCount = 5;
 
-        public readonly Dictionary<string, Deck> Decks;
+        private readonly Dictionary<string, Deck> _decks;
         public BackDeck BackDeck;
         public BorderChestDeck[] BorderChestDecks;
         public MiddleChestDeck[] MiddleChestDecks;
@@ -37,42 +37,81 @@ namespace Well.Objects
         public TopDeck[] TopDecks;
         public WarehouseDeck WarehouseDeck;
 
+        public DeckCollection() : this(new List<SuitEnum>())
+        {
+        }
+
         public DeckCollection(List<SuitEnum> availableSuits)
         {
-            Decks = new Dictionary<string, Deck>();
+            _decks = new Dictionary<string, Deck>();
             BackDeck = new BackDeck();
-            Decks.Add(BackDeck.Name, BackDeck);
+            _decks.Add(BackDeck.Name, BackDeck);
             WarehouseDeck = new WarehouseDeck();
-            Decks.Add(WarehouseDeck.Name, WarehouseDeck);
+            _decks.Add(WarehouseDeck.Name, WarehouseDeck);
             BorderChestDecks = new BorderChestDeck[BorderCount];
             for (int i = 0; i < BorderCount; i++)
             {
                 BorderChestDecks[i] = new BorderChestDeck(i);
-                Decks.Add(BorderChestDecks[i].Name, BorderChestDecks[i]);
+                _decks.Add(BorderChestDecks[i].Name, BorderChestDecks[i]);
             }
             MiddleChestDecks = new MiddleChestDeck[MiddleCount];
             for (int i = 0; i < MiddleCount; i++)
             {
                 MiddleChestDecks[i] = new MiddleChestDeck(i);
-                Decks.Add(MiddleChestDecks[i].Name, MiddleChestDecks[i]);
+                _decks.Add(MiddleChestDecks[i].Name, MiddleChestDecks[i]);
             }
             ResultDecks = new ResultDeck[ResultCount];
             for (int i = 0; i < ResultCount; i++)
             {
                 ResultDecks[i] = new ResultDeck(i, availableSuits);
-                Decks.Add(ResultDecks[i].Name, ResultDecks[i]);
+                _decks.Add(ResultDecks[i].Name, ResultDecks[i]);
             }
             TopDecks = new TopDeck[TopCount];
             for (int i = 0; i < TopCount; i++)
             {
                 TopDecks[i] = new TopDeck(i);
-                Decks.Add(TopDecks[i].Name, TopDecks[i]);
+                _decks.Add(TopDecks[i].Name, TopDecks[i]);
             }
         }
 
         public Deck this[string key]
         {
-            get { return Decks[key]; }
+            get { return _decks[key]; }
+        }
+
+        public void Copy(DeckCollection collection, List<SuitEnum> availableSuits)
+        {
+            _decks.Clear();
+            BackDeck = collection.BackDeck;
+            _decks.Add(BackDeck.Name, BackDeck);
+            WarehouseDeck = collection.WarehouseDeck;
+            _decks.Add(WarehouseDeck.Name, WarehouseDeck);
+            BorderChestDecks = collection.BorderChestDecks;
+            for (int i = 0; i < BorderCount; i++)
+            {
+                _decks.Add(BorderChestDecks[i].Name, BorderChestDecks[i]);
+            }
+            MiddleChestDecks = collection.MiddleChestDecks;
+            for (int i = 0; i < MiddleCount; i++)
+            {
+                _decks.Add(MiddleChestDecks[i].Name, MiddleChestDecks[i]);
+            }
+            ResultDecks = collection.ResultDecks;
+            for (int i = 0; i < ResultCount; i++)
+            {
+                ResultDecks[i].AvailableSuits = availableSuits;
+                _decks.Add(ResultDecks[i].Name, ResultDecks[i]);
+            }
+            TopDecks = collection.TopDecks;
+            for (int i = 0; i < TopCount; i++)
+            {
+                _decks.Add(TopDecks[i].Name, TopDecks[i]);
+            }
+        }
+
+        public Dictionary<string, Deck>.Enumerator GetDictonaryEnumerator()
+        {
+            return _decks.GetEnumerator();
         }
 
         public DeckEnumerator GetEnumerator()

@@ -34,6 +34,8 @@
             <MenuItem Header="{DynamicResource File}">
                 <MenuItem Header="{DynamicResource Exit}" Name="MenuItemExit" Click="menuItemExit_Click"
                           InputGestureText="Esc" />
+                <MenuItem Header="{DynamicResource Save}" Name="MenuItemSave" Click="menuItemSave_Click"/>
+                <MenuItem Header="{DynamicResource Load}" Name="MenuItemLoad" Click="menuItemLoad_Click"/>
             </MenuItem>
             <MenuItem Header="{DynamicResource Game}">
                 <MenuItem Header="{DynamicResource CancelStep}" Name="MenuItemCancelStep"
