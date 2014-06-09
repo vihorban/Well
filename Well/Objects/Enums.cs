@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using LocalizableAttribute;
 
@@ -33,51 +35,6 @@ namespace Well.Objects
         Back
     }
 
-    public class CardStyleListItem
-    {
-        public int Value;
-
-        public CardStyleListItem(int newValue)
-        {
-            Value = newValue;
-        }
-
-        public override string ToString()
-        {
-            switch (Value)
-            {
-                case 0:
-                {
-                    return Application.Current.TryFindResource("Casulal").ToString();
-                }
-                case 1:
-                {
-                    return Application.Current.TryFindResource("Modern").ToString();
-                }
-                case 2:
-                {
-                    return Application.Current.TryFindResource("MassEffect").ToString();
-                }
-                case 3:
-                {
-                    return Application.Current.TryFindResource("Snap2Objects").ToString();
-                }
-                case 4:
-                {
-                    return Application.Current.TryFindResource("Emotions").ToString();
-                }
-                case 5:
-                {
-                    return Application.Current.TryFindResource("Microsoft").ToString();
-                }
-                default:
-                {
-                    return Application.Current.TryFindResource("Error").ToString();
-                }
-            }
-        }
-    }
-
     public enum Languages
     {
         [LocalizableDescription("Ukrainian")] Ukrainian = 1,
@@ -92,218 +49,108 @@ namespace Well.Objects
         [LocalizableDescription("InfinityCancellationsEnable")] InfinityCancellationsEnable = Int32.MaxValue,
     }
 
-    public class BackSuitListItem
+    public abstract class ListItem
     {
-        public int Value;
+        protected Dictionary<int, string> Mapping;
 
-        public BackSuitListItem(int newValue)
+        public int GetKey(string value)
         {
-            Value = newValue;
+            return Mapping.First(x => Localizable(x.Value) == value).Key;
         }
 
-        public override string ToString()
+        private string Localizable(string key)
         {
-            switch (Value)
-            {
-                case 0:
-                {
-                    return Application.Current.TryFindResource("Raster").ToString();
-                }
-                case 1:
-                {
-                    return Application.Current.TryFindResource("Lake").ToString();
-                }
-                case 2:
-                {
-                    return Application.Current.TryFindResource("Bird").ToString();
-                }
-                case 3:
-                {
-                    return Application.Current.TryFindResource("Field").ToString();
-                }
-                case 4:
-                {
-                    return Application.Current.TryFindResource("Tree").ToString();
-                }
-                case 5:
-                {
-                    return Application.Current.TryFindResource("Casual").ToString();
-                }
-                case 6:
-                {
-                    return Application.Current.TryFindResource("Space").ToString();
-                }
-                case 7:
-                {
-                    return Application.Current.TryFindResource("Earth").ToString();
-                }
-                case 8:
-                {
-                    return Application.Current.TryFindResource("Night City").ToString();
-                }
-                case 9:
-                {
-                    return Application.Current.TryFindResource("Quay").ToString();
-                }
-                case 10:
-                {
-                    return Application.Current.TryFindResource("Sunset").ToString();
-                }
-                case 11:
-                {
-                    return Application.Current.TryFindResource("Wing Mass Effect").ToString();
-                }
-                case 12:
-                {
-                    return Application.Current.TryFindResource("Star Mass Effect").ToString();
-                }
-                case 13:
-                {
-                    return Application.Current.TryFindResource("N7 Mass Effect").ToString();
-                }
-                case 14:
-                {
-                    return Application.Current.TryFindResource("Symbol Mass Effect").ToString();
-                }
-                case 15:
-                {
-                    return Application.Current.TryFindResource("Classic Emotions").ToString();
-                }
-                case 16:
-                {
-                    return Application.Current.TryFindResource("Classic Microsoft").ToString();
-                }
-                case 17:
-                {
-                    return Application.Current.TryFindResource("Hearts Microsoft").ToString();
-                }
-                case 18:
-                {
-                    return Application.Current.TryFindResource("Seasons Microsoft").ToString();
-                }
-                default:
-                {
-                    return Application.Current.TryFindResource("Error").ToString();
-                }
-            }
+            return Application.Current.TryFindResource(key).ToString();
+        }
+
+        public List<string> GetList()
+        {
+            return Mapping.Select(kvp => Localizable(kvp.Value)).ToList();
         }
     }
 
-    public class EmptyCardListItem
+    public class CardStyleListItem : ListItem
     {
-        public int Value;
-
-        public EmptyCardListItem(int newValue)
+        public CardStyleListItem()
         {
-            Value = newValue;
-        }
-
-        public override string ToString()
-        {
-            switch (Value)
+            Mapping = new Dictionary<int, string>
             {
-                case 0:
-                {
-                    return Application.Current.TryFindResource("Green").ToString();
-                }
-                case 1:
-                {
-                    return Application.Current.TryFindResource("Yellow").ToString();
-                }
-                case 2:
-                {
-                    return Application.Current.TryFindResource("Red").ToString();
-                }
-                case 3:
-                {
-                    return Application.Current.TryFindResource("Blue").ToString();
-                }
-                case 4:
-                {
-                    return Application.Current.TryFindResource("White").ToString();
-                }
-                case 5:
-                {
-                    return Application.Current.TryFindResource("Pink").ToString();
-                }
-                case 6:
-                {
-                    return Application.Current.TryFindResource("Gray").ToString();
-                }
-                case 7:
-                {
-                    return Application.Current.TryFindResource("Old").ToString();
-                }
-                default:
-                {
-                    return Application.Current.TryFindResource("Error").ToString();
-                }
-            }
+                {0, "Casulal"},
+                {1, "Modern"},
+                {2, "MassEffect"},
+                {3, "Snap2Objects"},
+                {4, "Emotions"},
+                {5, "Microsoft"}
+            };
         }
     }
 
-    public class ZeroCardListItem
+    public class BackSuitListItem : ListItem
     {
-        public int Value;
-
-        public ZeroCardListItem(int newValue)
+        public BackSuitListItem()
         {
-            Value = newValue;
-        }
-
-        public override string ToString()
-        {
-            switch (Value)
+            Mapping = new Dictionary<int, string>
             {
-                case 0:
-                {
-                    return Application.Current.TryFindResource("Green With Circle").ToString();
-                }
-                case 1:
-                {
-                    return Application.Current.TryFindResource("Green Usual").ToString();
-                }
-                case 2:
-                {
-                    return Application.Current.TryFindResource("Yellow With Circle").ToString();
-                }
-                case 3:
-                {
-                    return Application.Current.TryFindResource("Yellow Usual").ToString();
-                }
-                case 4:
-                {
-                    return Application.Current.TryFindResource("Create Me").ToString();
-                }
-                case 5:
-                {
-                    return Application.Current.TryFindResource("Gift Card").ToString();
-                }
-                case 6:
-                {
-                    return Application.Current.TryFindResource("Book").ToString();
-                }
-                case 7:
-                {
-                    return Application.Current.TryFindResource("Touch").ToString();
-                }
-                case 8:
-                {
-                    return Application.Current.TryFindResource("Thank You").ToString();
-                }
-                case 9:
-                {
-                    return Application.Current.TryFindResource("Guide").ToString();
-                }
-                case 10:
-                {
-                    return Application.Current.TryFindResource("Joke").ToString();
-                }
-                default:
-                {
-                    return Application.Current.TryFindResource("Error").ToString();
-                }
-            }
+                {0, "Raster"},
+                {1, "Lake"},
+                {2, "Bird"},
+                {3, "Field"},
+                {4, "Tree"},
+                {5, "Casual"},
+                {6, "Space"},
+                {7, "Earth"},
+                {8, "Night City"},
+                {9, "Quay"},
+                {10, "Sunset"},
+                {11, "Wing Mass Effect"},
+                {12, "Star Mass Effect"},
+                {13, "N7 Mass Effect"},
+                {14, "Symbol Mass Effect"},
+                {15, "Classic Emotions"},
+                {16, "Classic Microsoft"},
+                {17, "Hearts Microsoft"},
+                {18, "Seasons Microsoft"},
+            };
+        }
+    }
+
+
+    public class EmptyCardListItem : ListItem
+    {
+        public EmptyCardListItem()
+        {
+            Mapping = new Dictionary<int, string>
+            {
+                {0, "Green"},
+                {1, "Yellow"},
+                {2, "Red"},
+                {3, "Blue"},
+                {4, "White"},
+                {5, "Pink"},
+                {6, "Gray"},
+                {7, "Old"}
+            };
+        }
+    }
+
+    public class ZeroCardListItem : ListItem
+    {
+        public ZeroCardListItem()
+        {
+            Mapping = new Dictionary<int, string>
+            {
+                {0, "Green With Circle"},
+                {1, "Green Usual"},
+                {2, "Yellow With Circle"},
+                {3, "Yellow Usual"},
+                {4, "Create Me"},
+                {5, "Gift Card"},
+                {6, "Book"},
+                {7, "Touch"},
+                {8, "Thank You"},
+                {9, "Guide"},
+                {10, "Joke"}
+            };
         }
     }
 }

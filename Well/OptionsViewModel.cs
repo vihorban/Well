@@ -14,11 +14,19 @@ namespace Well
 {
     public class OptionsViewModel : Observable
     {
-        private const int NumOfBackSuits = 19;
-        private const int NumOfEmptyCards = 8;
-        private const int NumOfZeroCards = 11;
-        private const int NumOfCardStyles = 6;
         private const string BasePath = "pack://application:,,,";
+        private readonly BackSuitListItem _backSuitListItem;
+        private readonly CardStyleListItem _cardStyleListItem;
+        private readonly EmptyCardListItem _emptyCardListItem;
+        private readonly ZeroCardListItem _zeroCardListItem;
+
+        public OptionsViewModel()
+        {
+            _backSuitListItem = new BackSuitListItem();
+            _cardStyleListItem = new CardStyleListItem();
+            _zeroCardListItem = new ZeroCardListItem();
+            _emptyCardListItem = new EmptyCardListItem();
+        }
 
         private Settings Settings
         {
@@ -157,13 +165,7 @@ namespace Well
         [Browsable(false)]
         public List<string> CardStyleItemsDescription
         {
-            get
-            {
-                var items = new List<string>();
-                for (int i = 0; i < NumOfCardStyles; i++)
-                    items.Add(new CardStyleListItem(i).ToString());
-                return items;
-            }
+            get { return _cardStyleListItem.GetList(); }
         }
 
         [LocalizableCategory("CardStyle|")]
@@ -174,15 +176,9 @@ namespace Well
             get { return CardStyleItemsDescription[Settings.CardStyleSelectedNumber]; }
             set
             {
-                for (int i = 0; i < NumOfCardStyles; i++)
-                {
-                    if (CardStyleItemsDescription[i] == value)
-                    {
-                        Settings.CardStyleSelectedNumber = i;
-                        NotifyPropertyChanged("CardStyle");
-                        NotifyPropertyChanged("CardStyleImagePreview");
-                    }
-                }
+                Settings.CardStyleSelectedNumber = _cardStyleListItem.GetKey(value);
+                NotifyPropertyChanged("CardStyle");
+                NotifyPropertyChanged("CardStyleImagePreview");
             }
         }
 
@@ -201,13 +197,7 @@ namespace Well
         [Browsable(false)]
         public List<string> BackSuitItemsDescription
         {
-            get
-            {
-                var items = new List<string>();
-                for (int i = 0; i < NumOfBackSuits; i++)
-                    items.Add(new BackSuitListItem(i).ToString());
-                return items;
-            }
+            get { return _backSuitListItem.GetList(); }
         }
 
         [LocalizableCategory("Back Suit")]
@@ -218,15 +208,9 @@ namespace Well
             get { return BackSuitItemsDescription[Settings.BackSuitSelectedNumber]; }
             set
             {
-                for (int i = 0; i < NumOfBackSuits; i++)
-                {
-                    if (BackSuitItemsDescription[i] == value)
-                    {
-                        Settings.BackSuitSelectedNumber = i;
-                        NotifyPropertyChanged("BackSuit");
-                        NotifyPropertyChanged("BackSuitImagePreview");
-                    }
-                }
+                Settings.BackSuitSelectedNumber = _backSuitListItem.GetKey(value);
+                NotifyPropertyChanged("BackSuit");
+                NotifyPropertyChanged("BackSuitImagePreview");
             }
         }
 
@@ -246,13 +230,7 @@ namespace Well
         [Browsable(false)]
         public List<string> ZeroCardItemsDescription
         {
-            get
-            {
-                var items = new List<string>();
-                for (int i = 0; i < NumOfZeroCards; i++)
-                    items.Add(new ZeroCardListItem(i).ToString());
-                return items;
-            }
+            get { return _zeroCardListItem.GetList(); }
         }
 
         [LocalizableCategory("EmptyDeckMenu")]
@@ -263,15 +241,9 @@ namespace Well
             get { return ZeroCardItemsDescription[Settings.ZeroCardSelectedNumber]; }
             set
             {
-                for (int i = 0; i < NumOfZeroCards; i++)
-                {
-                    if (ZeroCardItemsDescription[i] == value)
-                    {
-                        Settings.ZeroCardSelectedNumber = i;
-                        NotifyPropertyChanged("ZeroCard");
-                        NotifyPropertyChanged("ZeroCardImagePreview");
-                    }
-                }
+                Settings.ZeroCardSelectedNumber = _zeroCardListItem.GetKey(value);
+                NotifyPropertyChanged("ZeroCard");
+                NotifyPropertyChanged("ZeroCardImagePreview");
             }
         }
 
@@ -291,13 +263,7 @@ namespace Well
         [Browsable(false)]
         public List<string> EmptyCardItemsDescription
         {
-            get
-            {
-                var items = new List<string>();
-                for (int i = 0; i < NumOfEmptyCards; i++)
-                    items.Add(new EmptyCardListItem(i).ToString());
-                return items;
-            }
+            get { return _emptyCardListItem.GetList(); }
         }
 
         [LocalizableCategory("EmptyCardMenu")]
@@ -308,15 +274,9 @@ namespace Well
             get { return EmptyCardItemsDescription[Settings.EmptyCardSelectedNumber]; }
             set
             {
-                for (int i = 0; i < NumOfEmptyCards; i++)
-                {
-                    if (EmptyCardItemsDescription[i] == value)
-                    {
-                        Settings.EmptyCardSelectedNumber = i;
-                        NotifyPropertyChanged("EmptyCard");
-                        NotifyPropertyChanged("EmptyCardImagePreview");
-                    }
-                }
+                Settings.EmptyCardSelectedNumber = _emptyCardListItem.GetKey(value);
+                NotifyPropertyChanged("EmptyCard");
+                NotifyPropertyChanged("EmptyCardImagePreview");
             }
         }
 
